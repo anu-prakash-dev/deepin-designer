@@ -364,9 +364,16 @@ namespace Widgets {
         
         private bool on_key_press(Gtk.Widget widget, Gdk.EventKey key_event) {
             string keyname = Keymap.get_keyevent_name(key_event);
+            
+            if (keyname == "F11") {
+                toggle_fullscreen();
+                return true;
+            }
                 
             if (keyname == "F1") {
                 Utils.show_manual();
+                
+                return true;
             }
                 
             return false;
