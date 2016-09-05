@@ -15,6 +15,7 @@ main: ./lib/animation.vala \
       ./widget/dialog.vala \
       ./widget/workspace.vala \
       ./widget/page_manager.vala \
+      ./widget/page.vala \
       ./project_path.c \
       ./widget/window.vala \
       main.vala
@@ -47,6 +48,7 @@ main: ./lib/animation.vala \
 	./widget/dialog.vala \
 	./widget/workspace.vala \
 	./widget/page_manager.vala \
+	./widget/page.vala \
     ./project_path.c \
     ./widget/window.vala \
     main.vala

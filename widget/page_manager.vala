@@ -1,29 +1,20 @@
 using Gtk;
 
 namespace Widgets {
-    public class PageManager : Gtk.DrawingArea {
-        public Gdk.RGBA background_color;
+    public class PageManager : Gtk.VBox {
+        public Widgets.Page focus_page;
         
         public PageManager() {
-            background_color = Utils.hex_to_rgba("#f2f2f2", 1);
-            
-            draw.connect(on_draw);
+            new_page();
         }
         
-        private bool on_draw(Gtk.Widget widget, Cairo.Context cr) {
-            Gtk.Allocation rect;
-            widget.get_allocation(out rect);
+        public void new_page() {
+            var page = new Widgets.Page();
+
+            Utils.remove_all_children(this);
+            pack_start(page, true, true, 0);
             
-            var window = (Widgets.Window) get_toplevel();
-            
-            Utils.set_context_color(cr, background_color);
-            if (window.window_is_normal()) {
-                Draw.draw_rounded_rectangle(cr, 0, 0, rect.width, rect.height, 5);
-            } else {
-                Draw.draw_rectangle(cr, 0, 0, rect.width, rect.height);
-            }
-            
-            return true;
+            focus_page = page;
         }
     }
 }
