@@ -39,5 +39,5 @@ public class Constant {
     public static int THEME_BUTTON_PADDING = 5;
     public static int THEME_BUTTON_WIDTH = 190;
     public static int THEME_SLIDER_WIDTH = 230;
-    public static int TITLEBAR_HEIGHT = 39;
+    public static int TITLEBAR_HEIGHT = 64;
 }                         

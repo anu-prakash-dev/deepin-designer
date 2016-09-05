@@ -75,9 +75,6 @@ namespace Widgets {
             toolbar_box.toolbar.close_window.connect((w) => {
                     quit();
                 });
-            toolbar_box.toolbar.quit_fullscreen.connect((w) => {
-                    toggle_fullscreen();
-                });
             
             workspace = new Widgets.Workspace();
             

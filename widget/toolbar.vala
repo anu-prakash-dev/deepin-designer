@@ -6,7 +6,6 @@ namespace Widgets {
         public ImageButton max_button;
         public ImageButton menu_button;
         public ImageButton min_button;
-        public ImageButton quit_fullscreen_button;
         public ImageButton unmax_button;
         public Box max_toggle_box;
         public Box window_button_box;
@@ -14,13 +13,14 @@ namespace Widgets {
         public Label title_label;
 		public int height = Constant.TITLEBAR_HEIGHT;
         public int logo_width = 48;
-        public int close_button_margin_right = 5;
+        public int logo_margin_top = 8;
+        public int button_margin_right = 5;
+        public int button_margin_top = 8;
         public Widgets.WindowEventArea event_area;
         public Gdk.RGBA background_color;
         public Gdk.RGBA frame_color;
 
         public signal void close_window();
-        public signal void quit_fullscreen();
         
         public Toolbar() {
 			set_size_request(-1, height);
@@ -36,23 +36,12 @@ namespace Widgets {
             max_button = new ImageButton("window_max", true);
             unmax_button = new ImageButton("window_unmax", true);
             close_button = new ImageButton("window_close", true);
-            quit_fullscreen_button = new ImageButton("quit_fullscreen", true);
 			
-			int margin_top = (int) (height - menu_button.normal_dark_surface.get_height()) / 2;
-            int margin_right = 6;
-			menu_button.margin_top = margin_top;
-			min_button.margin_top = margin_top;
-			max_button.margin_top = margin_top;
-			unmax_button.margin_top = margin_top;
-			close_button.margin_top = margin_top;
-            quit_fullscreen_button.margin_top = margin_top;
-            quit_fullscreen_button.margin_right = margin_right;
+            window_button_box.margin_end = button_margin_right;
+            window_button_box.margin_top = button_margin_top;
             
             close_button.click.connect((w) => {
                     close_window();
-                });
-            quit_fullscreen_button.click.connect((w) => {
-                    quit_fullscreen();
                 });
             
             max_toggle_box = new Box(Gtk.Orientation.HORIZONTAL, 0);
@@ -76,20 +65,23 @@ namespace Widgets {
             Box box = new Box(Gtk.Orientation.HORIZONTAL, 0);
 			
 			var logo_box = new Box(Gtk.Orientation.VERTICAL, 0);
-			logo_box.set_size_request(logo_width, Constant.TITLEBAR_HEIGHT);
 			Gtk.Image logo_image = new Gtk.Image.from_file(Utils.get_image_path("title_icon.png"));
-			logo_box.pack_start(logo_image, true, true, 0);
+            logo_image.margin_top = logo_margin_top;
+			logo_box.set_size_request(logo_width, Constant.TITLEBAR_HEIGHT);
+			logo_box.pack_start(logo_image, false, false, 0);
 			box.pack_start(logo_box, false, false, 0);
 			
             max_toggle_box.add(max_button);
 
             title_label = new Label(null);
+            title_label.margin_top = margin_top;
             box.pack_start(title_label, true, true, 0);
             box.pack_start(window_button_box, false, false, 0);
-            box.pack_start(window_close_button_box, false, false, 0);
-            close_button.margin_end = close_button_margin_right;
             
-            show_window_button();
+            window_button_box.pack_start(menu_button, false, false, 0);
+            window_button_box.pack_start(min_button, false, false, 0);
+            window_button_box.pack_start(max_toggle_box, false, false, 0);
+            window_button_box.pack_start(close_button, false, false, 0);
             
             event_area = new Widgets.WindowEventArea(this);
             // Don't override window button area.
@@ -120,24 +112,6 @@ namespace Widgets {
             Utils.propagate_draw((Gtk.Container) widget, cr);
             
             return true;
-        }
-        
-        public void show_window_button() {
-            window_button_box.pack_start(menu_button, false, false, 0);
-            window_button_box.pack_start(min_button, false, false, 0);
-            window_button_box.pack_start(max_toggle_box, false, false, 0);
-            
-            Utils.remove_all_children(window_close_button_box);
-            window_close_button_box.pack_start(close_button, false, false, 0);
-            
-            show_all();
-        }
-        
-        public void hide_window_button() {
-            Utils.remove_all_children(window_button_box);
-            Utils.remove_all_children(window_close_button_box);
-            
-            window_close_button_box.pack_start(quit_fullscreen_button, false, false, 0);
         }
         
         public void update_max_button() {
