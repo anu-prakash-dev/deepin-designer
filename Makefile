@@ -13,6 +13,7 @@ main: ./lib/animation.vala \
       ./widget/layout_panel.vala \
       ./widget/window_event_area.vala \
       ./widget/dialog.vala \
+      ./widget/workspace.vala \
       ./widget/page_manager.vala \
       ./project_path.c \
       ./widget/window.vala \
@@ -44,6 +45,7 @@ main: ./lib/animation.vala \
 	./widget/layout_panel.vala \
 	./widget/window_event_area.vala \
 	./widget/dialog.vala \
+	./widget/workspace.vala \
 	./widget/page_manager.vala \
     ./project_path.c \
     ./widget/window.vala \

@@ -48,9 +48,7 @@ namespace Widgets {
         public int window_widget_margin_top = 1;
         public int window_width;
         public Widgets.ToolbarBox toolbar_box;
-        public Widgets.PageManager page_manager;
-        public Widgets.PagePanelBox page_panel_box;
-        public Widgets.LayoutPanelBox layout_panel_box;
+        public Widgets.Workspace workspace;
         
         private bool is_show_shortcut_viewer = false;
         public Config.Config config;
@@ -81,10 +79,7 @@ namespace Widgets {
                     toggle_fullscreen();
                 });
             
-            page_manager = new Widgets.PageManager();
-            
-            page_panel_box = new PagePanelBox();
-            layout_panel_box = new LayoutPanelBox();
+            workspace = new Widgets.Workspace();
             
             delete_event.connect((w) => {
                     quit();
@@ -553,14 +548,11 @@ namespace Widgets {
         public void show_window() {
             set_position(Gtk.WindowPosition.CENTER);
             
-            page_panel_box.margin_top = Constant.TITLEBAR_HEIGHT;
-            layout_panel_box.margin_top = Constant.TITLEBAR_HEIGHT;
+            workspace.margin_top = Constant.TITLEBAR_HEIGHT;
                 
             var overlay = new Gtk.Overlay();
-            overlay.add(page_manager);
+            overlay.add(workspace);
             overlay.add_overlay(toolbar_box);
-            overlay.add_overlay(page_panel_box);
-            overlay.add_overlay(layout_panel_box);
             
             add_widget(overlay);
             show_all();
