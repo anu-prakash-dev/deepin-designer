@@ -9,7 +9,6 @@ namespace Layouts {
         public Gdk.RGBA drag_dot_frame_color;
         public Gdk.RGBA drag_dot_background_color;
         public int drag_dot_size = 6;
-        public bool is_active = false;
         
         public Layout() {
             frame_color = Utils.hex_to_rgba("#303030", 0.1);
@@ -21,6 +20,9 @@ namespace Layouts {
         
         public virtual void draw_layout(Cairo.Context cr) {
             
+        }
+        
+        public virtual void draw_drag_dot(Cairo.Context cr) {
         }
     }
 }

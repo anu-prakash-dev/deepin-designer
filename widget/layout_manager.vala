@@ -10,13 +10,17 @@ namespace Widgets {
             layout_list = new ArrayList<Layouts.Layout>();
         }
         
-        public void add_layout(string layout_type, int x, int y, int w, int h) {
+        public Layouts.Layout? add_layout(string layout_type, int x, int y, int w, int h) {
             if (layout_type == "Rectangle") {
                 var layout = new Layouts.RectangleLayout();
                 layout.init(x, y, w, h);
                 
                 layout_list.add(layout);
+                
+                return layout;
             }
+            
+            return null;
         }
     }
 }

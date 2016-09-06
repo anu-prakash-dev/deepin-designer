@@ -7,6 +7,7 @@ namespace Widgets {
         public Gdk.RGBA drag_background_color;
         public Gdk.RGBA drag_layout_color;
         public LayoutManager layout_manager;
+        public Layouts.Layout? focus_layout;
         public string? layout_type;
         public int? drag_start_x;
         public int? drag_start_y;
@@ -52,7 +53,7 @@ namespace Widgets {
                         int draw_width = (int) Math.fabs(drag_start_x - drag_x);
                         int draw_height = (int) Math.fabs(drag_start_y - drag_y);
                         
-                        layout_manager.add_layout(layout_type, draw_x, draw_y, draw_width, draw_height);
+                        focus_layout = layout_manager.add_layout(layout_type, draw_x, draw_y, draw_width, draw_height);
                         
                         layout_type = null;
                     }
@@ -108,11 +109,16 @@ namespace Widgets {
                 layout.draw_layout(cr);
             }
             
+            if (focus_layout != null) {
+                focus_layout.draw_drag_dot(cr);
+            }
+            
             return true;
         }
         
         public void start_add_layout(string type) {
             layout_type = type;
+            focus_layout = null;
 
             set_layout_cursor();
         }
