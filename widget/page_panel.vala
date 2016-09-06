@@ -34,21 +34,4 @@ namespace Widgets {
             return true;
         }
     }
-
-    public class PagePanelBox : Gtk.VBox {
-        public Gtk.Box expand_box;
-        public Gtk.Box content_box;
-        public PagePanel page_panel;
-        
-        public PagePanelBox() {
-            page_panel = new PagePanel();
-            
-            content_box = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 0);
-            expand_box = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 0);
-
-            pack_start(content_box, true, true, 0);
-            content_box.pack_start(page_panel, false, false, 0);
-            content_box.pack_start(expand_box, true, true, 0);
-        }
-    }
 }

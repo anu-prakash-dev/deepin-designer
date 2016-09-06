@@ -367,6 +367,16 @@ namespace Widgets {
                 
                 return true;
             }
+            
+            if (keyname == "Alt + r") {
+                workspace.page_manager.focus_page.start_add_layout("Rectangle");
+                
+                return true;
+            }
+            
+            if (keyname == "Esc") {
+                workspace.page_manager.focus_page.cancel_add_layout();
+            }
                 
             return false;
         }
@@ -545,13 +555,11 @@ namespace Widgets {
         public void show_window() {
             set_position(Gtk.WindowPosition.CENTER);
             
-            workspace.margin_top = Constant.TITLEBAR_HEIGHT;
-                
-            var overlay = new Gtk.Overlay();
-            overlay.add(workspace);
-            overlay.add_overlay(toolbar_box);
+            var box = new Gtk.Box(Gtk.Orientation.VERTICAL, 0);
+            box.pack_start(toolbar_box, false, false, 0);
+            box.pack_start(workspace, true, true, 0);
             
-            add_widget(overlay);
+            add_widget(box);
             show_all();
         }
         

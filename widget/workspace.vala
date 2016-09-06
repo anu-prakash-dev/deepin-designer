@@ -1,19 +1,19 @@
 using Gtk;
 
 namespace Widgets {
-    public class Workspace : Gtk.Overlay {
+    public class Workspace : Gtk.HBox {
+        public Widgets.PagePanel page_panel;
         public Widgets.PageManager page_manager;
-        public Widgets.PagePanelBox page_panel_box;
-        public Widgets.LayoutPanelBox layout_panel_box;
+        public Widgets.LayoutPanel layout_panel;
         
         public Workspace() {
             page_manager = new Widgets.PageManager();
-            page_panel_box = new PagePanelBox();
-            layout_panel_box = new LayoutPanelBox();            
-            
-            add(page_manager);
-            add_overlay(page_panel_box);
-            add_overlay(layout_panel_box);
+            page_panel = new PagePanel();
+            layout_panel = new LayoutPanel();            
+
+            pack_start(page_panel, false, false, 0);
+            pack_start(page_manager, true, true, 0);
+            pack_start(layout_panel, false, false, 0);
         }
     }
 }
