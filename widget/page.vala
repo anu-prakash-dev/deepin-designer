@@ -5,6 +5,7 @@ namespace Widgets {
         public Gdk.RGBA background_color;
         public Gdk.RGBA drag_frame_color;
         public Gdk.RGBA drag_background_color;
+        public Gdk.RGBA drag_layout_color;
         public LayoutManager layout_manager;
         public string? layout_type;
         public int? drag_start_x;
@@ -16,7 +17,8 @@ namespace Widgets {
             layout_manager = new Widgets.LayoutManager();
             background_color = Utils.hex_to_rgba("#f2f2f2", 1);
             drag_frame_color = Utils.hex_to_rgba("#303030", 0.1);
-            drag_background_color = Utils.hex_to_rgba("#e6e6e6", 0.1);
+            drag_background_color = Utils.hex_to_rgba("#ff0000", 0.1);
+            drag_layout_color = Utils.hex_to_rgba("#000000", 0.1);
             
             add_events(Gdk.EventMask.BUTTON_PRESS_MASK
                        | Gdk.EventMask.BUTTON_RELEASE_MASK
@@ -44,12 +46,25 @@ namespace Widgets {
                 });
             
             button_release_event.connect((w, e) => {
+                    if (layout_type != null) {
+                        int draw_x = int.min(drag_start_x, drag_x);
+                        int draw_y = int.min(drag_start_y, drag_y);
+                        int draw_width = (int) Math.fabs(drag_start_x - drag_x);
+                        int draw_height = (int) Math.fabs(drag_start_y - drag_y);
+                        
+                        layout_manager.add_layout(layout_type, draw_x, draw_y, draw_width, draw_height);
+                        
+                        layout_type = null;
+                    }
+                    
                     drag_start_x = null;
                     drag_start_y = null;
                     drag_x = null;
                     drag_y = null;
                         
                     queue_draw();
+                    
+                    reset_cursor();
                     
                     return false;
                 });
@@ -77,6 +92,20 @@ namespace Widgets {
                     Utils.set_context_color(cr, drag_frame_color);
                     Draw.draw_rectangle(cr, draw_x, draw_y, draw_width, draw_height, false);
                 }
+            } else {
+                if (drag_start_x != null && drag_start_y != null && drag_x != null && drag_y != null) {
+                    int draw_x = int.min(drag_start_x, drag_x);
+                    int draw_y = int.min(drag_start_y, drag_y);
+                    int draw_width = (int) Math.fabs(drag_start_x - drag_x);
+                    int draw_height = (int) Math.fabs(drag_start_y - drag_y);
+                    
+                    Utils.set_context_color(cr, drag_layout_color);
+                    Draw.draw_rectangle(cr, draw_x, draw_y, draw_width, draw_height, false);
+                }
+            }
+            
+            foreach (Layouts.Layout layout in layout_manager.layout_list) {
+                layout.draw_layout(cr);
             }
             
             return true;
@@ -84,18 +113,22 @@ namespace Widgets {
         
         public void start_add_layout(string type) {
             layout_type = type;
-            
-            var display = Gdk.Display.get_default();
-            get_toplevel().get_window().set_cursor(new Gdk.Cursor.for_display(display, Gdk.CursorType.CROSSHAIR));
+
+            set_layout_cursor();
         }
         
         public void cancel_add_layout() {
             layout_type = null;
-            get_toplevel().get_window().set_cursor(null);
+            reset_cursor();
         }
         
-        public void add_layout(string layout_type) {
-            
+        public void set_layout_cursor() {
+            var display = Gdk.Display.get_default();
+            get_toplevel().get_window().set_cursor(new Gdk.Cursor.for_display(display, Gdk.CursorType.CROSSHAIR));
+        }
+        
+        public void reset_cursor() {
+            get_toplevel().get_window().set_cursor(null);
         }
     }
 }
