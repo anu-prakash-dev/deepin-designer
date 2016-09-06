@@ -121,6 +121,8 @@ namespace Widgets {
             focus_layout = null;
 
             set_layout_cursor();
+            
+            queue_draw();
         }
         
         public void cancel_add_layout() {
