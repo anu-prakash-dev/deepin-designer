@@ -22,7 +22,45 @@ namespace Layouts {
             
         }
         
-        public virtual void draw_drag_dot(Cairo.Context cr) {
+        public void draw_drag_frame(Cairo.Context cr) {
+            // Top left drag dot.
+            int drag_dot_x = x - drag_dot_size / 2;
+            int drag_dot_y = y - drag_dot_size / 2;
+                
+            Utils.set_context_color(cr, drag_dot_background_color);
+            Draw.draw_rectangle(cr, drag_dot_x + 1, drag_dot_y + 1, drag_dot_size - 2, drag_dot_size - 2);
+                
+            Utils.set_context_color(cr, drag_dot_frame_color);
+            Draw.draw_rectangle(cr, drag_dot_x, drag_dot_y, drag_dot_size, drag_dot_size);
+
+            // Top middle drag dot.
+            draw_drag_dot(cr, x + width / 2 - drag_dot_size / 2, y - drag_dot_size / 2);
+            
+            // Top right drag dot.
+            draw_drag_dot(cr, x + width - drag_dot_size / 2, y - drag_dot_size / 2);
+
+            // Bottom left drag dot.
+            draw_drag_dot(cr, x - drag_dot_size / 2, y + height - drag_dot_size / 2);
+            
+            // Bottom middle drag dot.
+            draw_drag_dot(cr, x + width / 2 - drag_dot_size / 2, y + height - drag_dot_size / 2);
+            
+            // Bottom right drag dot.
+            draw_drag_dot(cr, x + width - drag_dot_size / 2, y + height - drag_dot_size / 2);
+            
+            // Left drag dot.
+            draw_drag_dot(cr, x - drag_dot_size / 2, y + height / 2 - drag_dot_size / 2);
+            
+            // Right drag dot.
+            draw_drag_dot(cr, x + width - drag_dot_size / 2, y + height / 2 - drag_dot_size / 2);
+        }
+        
+        public void draw_drag_dot(Cairo.Context cr, int x, int y) {
+            Utils.set_context_color(cr, drag_dot_background_color);
+            Draw.draw_rectangle(cr, x + 1, y + 1, drag_dot_size - 2, drag_dot_size - 2);
+                
+            Utils.set_context_color(cr, drag_dot_frame_color);
+            Draw.draw_rectangle(cr, x, y, drag_dot_size, drag_dot_size);
         }
     }
 }

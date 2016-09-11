@@ -110,7 +110,7 @@ namespace Widgets {
             }
             
             if (focus_layout != null) {
-                focus_layout.draw_drag_dot(cr);
+                focus_layout.draw_drag_frame(cr);
             }
             
             return true;
