@@ -108,4 +108,18 @@ namespace Layouts {
         
         return layout;
     }
+
+    public Layout create_triangle_layout(int x, int y, int w, int h) {
+        var layout = new Layout();
+        layout.x = x;
+        layout.y = y;
+        layout.width = w;
+        layout.height = h;
+        
+        layout.add_draw_dot(x + w / 2, y);
+        layout.add_draw_dot(x + w, y + h);
+        layout.add_draw_dot(x, y + h);
+        
+        return layout;
+    }
 }

@@ -11,14 +11,18 @@ namespace Widgets {
         }
         
         public Layouts.Layout? add_layout(string layout_type, int x, int y, int w, int h) {
+            Layouts.Layout? layout = null;
             if (layout_type == "Rectangle") {
-                var layout = Layouts.create_rectangle_layout(x, y, w, h);
-                layout_list.add(layout);
-                
-                return layout;
+                layout = Layouts.create_rectangle_layout(x, y, w, h);
+            } else if (layout_type == "Triangle") {
+                layout = Layouts.create_triangle_layout(x, y, w, h);
             }
             
-            return null;
+            if (layout != null) {
+                layout_list.add(layout);
+            }
+            
+            return layout;
         }
     }
 }
