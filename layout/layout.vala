@@ -166,4 +166,29 @@ namespace Layouts {
 
         return layout;
     }
+
+    public Layout create_pentagon_layout(int x, int y, int w, int h) {
+        var layout = new Layout();
+        init_layout(layout, x, y, w, h);
+
+        int outside_y_offset = (int) Math.sqrt(((double) Math.pow(w, 2) * Math.pow(h, 2) + 4 * Math.pow(h, 4)) / ((double) 9 * Math.pow(w, 2) + 36 * Math.pow(h, 2)));
+        int outside_x_offset = (int) (((double) (outside_y_offset * w)) / ((double) (2 * h)));
+        
+        // Outside a dot.
+        layout.add_draw_dot(x + w / 2, y);
+
+        // Outside b dot.
+        layout.add_draw_dot(x + w, y + outside_y_offset);
+
+        // Outside c dot.
+        layout.add_draw_dot(x + w / 2 + outside_x_offset, y + h);
+        
+        // Outside d dot.
+        layout.add_draw_dot(x + w / 2 - outside_x_offset, y + h);
+        
+        // Outside e dot.
+        layout.add_draw_dot(x, y + outside_y_offset);
+        
+        return layout;
+    }
 }

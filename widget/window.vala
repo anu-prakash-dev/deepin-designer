@@ -386,6 +386,12 @@ namespace Widgets {
                 return true;
             }
             
+            if (keyname == "Alt + p") {
+                workspace.page_manager.focus_page.start_add_layout("Pentagon");
+                
+                return true;
+            }
+            
             if (keyname == "Esc") {
                 workspace.page_manager.focus_page.cancel_add_layout();
             }
