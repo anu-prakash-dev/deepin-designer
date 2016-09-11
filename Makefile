@@ -8,7 +8,6 @@ main: ./lib/animation.vala \
       ./lib/utils.vala \
       ./lib/xutils.vala \
       ./layout/layout.vala \
-      ./layout/rectangle_layout.vala \
       ./widget/image_button.vala \
       ./widget/toolbar.vala \
       ./widget/page_panel.vala \
@@ -44,7 +43,6 @@ main: ./lib/animation.vala \
     ./lib/utils.vala \
     ./lib/xutils.vala \
     ./layout/layout.vala \
-    ./layout/rectangle_layout.vala \
 	./widget/image_button.vala \
 	./widget/toolbar.vala \
 	./widget/page_panel.vala \
