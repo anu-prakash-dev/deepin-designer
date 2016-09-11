@@ -16,6 +16,8 @@ namespace Widgets {
                 layout = Layouts.create_rectangle_layout(x, y, w, h);
             } else if (layout_type == "Triangle") {
                 layout = Layouts.create_triangle_layout(x, y, w, h);
+            } else if (layout_type == "Five_Pointed_Star") {
+                layout = Layouts.create_five_pointed_star_layout(x, y, w, h);
             }
             
             if (layout != null) {

@@ -379,6 +379,12 @@ namespace Widgets {
                 
                 return true;
             }
+
+            if (keyname == "Alt + f") {
+                workspace.page_manager.focus_page.start_add_layout("Five_Pointed_Star");
+                
+                return true;
+            }
             
             if (keyname == "Esc") {
                 workspace.page_manager.focus_page.cancel_add_layout();
