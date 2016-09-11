@@ -94,12 +94,16 @@ namespace Layouts {
         }
     }
 
-    public Layout create_rectangle_layout(int x, int y, int w, int h) {
-        var layout = new Layout();
+    public void init_layout(Layout layout, int x, int y, int w, int h) {
         layout.x = x;
         layout.y = y;
         layout.width = w;
         layout.height = h;
+    }
+
+    public Layout create_rectangle_layout(int x, int y, int w, int h) {
+        var layout = new Layout();
+        init_layout(layout, x, y, w, h);
         
         layout.add_draw_dot(x, y);
         layout.add_draw_dot(x + w, y);
@@ -111,10 +115,7 @@ namespace Layouts {
 
     public Layout create_triangle_layout(int x, int y, int w, int h) {
         var layout = new Layout();
-        layout.x = x;
-        layout.y = y;
-        layout.width = w;
-        layout.height = h;
+        init_layout(layout, x, y, w, h);
         
         layout.add_draw_dot(x + w / 2, y);
         layout.add_draw_dot(x + w, y + h);
