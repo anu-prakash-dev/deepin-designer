@@ -392,6 +392,12 @@ namespace Widgets {
                 return true;
             }
             
+            if (keyname == "Alt + o") {
+                workspace.page_manager.focus_page.start_add_layout("Oval");
+                
+                return true;
+            }
+            
             if (keyname == "Esc") {
                 workspace.page_manager.focus_page.cancel_add_layout();
             }

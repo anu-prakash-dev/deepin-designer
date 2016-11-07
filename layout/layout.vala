@@ -23,10 +23,11 @@ namespace Layouts {
         public int drag_dot_size = 6;
 
         public ArrayList<DrawDot> draw_dots;
+        public string type = "";
 
         public Layout() {
-            frame_color = Utils.hex_to_rgba("#303030", 0.1);
-            background_color = Utils.hex_to_rgba("#ff0000", 0.1);
+            background_color = Utils.hex_to_rgba("#303030", 0.1);
+            frame_color = Utils.hex_to_rgba("#ff0000", 0.1);
 
             drag_dot_frame_color = Utils.hex_to_rgba("#000000", 0.5);
             drag_dot_background_color = Utils.hex_to_rgba("#333333", 0.1);
@@ -35,22 +36,57 @@ namespace Layouts {
         }
 
         public void draw_layout(Cairo.Context cr) {
-            if (draw_dots.size > 1) {
+            if (type == "Oval") {
+                var radius = int.min(width, height) / 2;
+                var scale = int.max(width, height) / int.min(width, height);
+                
+                Utils.set_context_color(cr, background_color);
+                cr.save();
+                cr.translate(x + width / 2, y + height / 2);
+                if (width > height) {
+                    cr.scale(scale, 1);
+                } else {
+                    cr.scale(1, scale);
+                }
+                cr.translate(-x - width / 2, -y - height / 2);
+                cr.arc(x + width / 2, y + height / 2, radius, 0, 2 * Math.PI);
+                
+                cr.restore();
+                
+                cr.fill();
+                
+                
+                Utils.set_context_color(cr, frame_color);
+                cr.save();
+                cr.translate(x + width / 2, y + height / 2);
+                if (width > height) {
+                    cr.scale(scale, 1);
+                } else {
+                    cr.scale(1, scale);
+                }
+                cr.translate(-x - width / 2, -y - height / 2);
+                cr.arc(x + width / 2, y + height / 2, radius, 0, 2 * Math.PI);
+                
+                cr.restore();
+                
+                cr.set_line_width(1);
+                cr.stroke();
+            } else if (draw_dots.size > 1) {
                 Utils.set_context_color(cr, background_color);
                 cr.move_to(draw_dots[0].x, draw_dots[0].y);
                 foreach (var dot in draw_dots[1:draw_dots.size]) {
                     cr.line_to(dot.x, dot.y);
                 }
                 cr.close_path();
-                cr.stroke();
-
+                cr.fill();
+                
                 Utils.set_context_color(cr, frame_color);
                 cr.move_to(draw_dots[0].x, draw_dots[0].y);
                 foreach (var dot in draw_dots[1:draw_dots.size]) {
                     cr.line_to(dot.x, dot.y);
                 }
                 cr.close_path();
-                cr.fill();
+                cr.stroke();
             }
         }
 
@@ -94,16 +130,17 @@ namespace Layouts {
         }
     }
 
-    public void init_layout(Layout layout, int x, int y, int w, int h) {
+    public void init_layout(Layout layout, string type, int x, int y, int w, int h) {
         layout.x = x;
         layout.y = y;
         layout.width = w;
         layout.height = h;
+        layout.type = type;
     }
 
-    public Layout create_rectangle_layout(int x, int y, int w, int h) {
+    public Layout create_rectangle_layout(string type, int x, int y, int w, int h) {
         var layout = new Layout();
-        init_layout(layout, x, y, w, h);
+        init_layout(layout, type, x, y, w, h);
 
         layout.add_draw_dot(x, y);
         layout.add_draw_dot(x + w, y);
@@ -113,9 +150,9 @@ namespace Layouts {
         return layout;
     }
 
-    public Layout create_triangle_layout(int x, int y, int w, int h) {
+    public Layout create_triangle_layout(string type, int x, int y, int w, int h) {
         var layout = new Layout();
-        init_layout(layout, x, y, w, h);
+        init_layout(layout, type, x, y, w, h);
 
         layout.add_draw_dot(x + w / 2, y);
         layout.add_draw_dot(x + w, y + h);
@@ -124,9 +161,9 @@ namespace Layouts {
         return layout;
     }
 
-    public Layout create_five_pointed_star_layout(int x, int y, int w, int h) {
+    public Layout create_five_pointed_star_layout(string type, int x, int y, int w, int h) {
         var layout = new Layout();
-        init_layout(layout, x, y, w, h);
+        init_layout(layout, type, x, y, w, h);
         
         var star_number = 5;
         var star_points = star_number * 2 + 1;
@@ -147,9 +184,9 @@ namespace Layouts {
         return layout;
     }
 
-    public Layout create_pentagon_layout(int x, int y, int w, int h) {
+    public Layout create_pentagon_layout(string type, int x, int y, int w, int h) {
         var layout = new Layout();
-        init_layout(layout, x, y, w, h);
+        init_layout(layout, type, x, y, w, h);
 
         var star_number = 5;
         var star_points = star_number * 2 + 1;
@@ -168,6 +205,13 @@ namespace Layouts {
                 }
             }
         }
+        
+        return layout;
+    }
+
+    public Layout create_oval_layout(string type, int x, int y, int w, int h) {
+        var layout = new Layout();
+        init_layout(layout, type, x, y, w, h);
         
         return layout;
     }
