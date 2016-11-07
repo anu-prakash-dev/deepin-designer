@@ -128,10 +128,12 @@ namespace Layouts {
         var layout = new Layout();
         init_layout(layout, x, y, w, h);
         
-        var alpha = (2 * Math.PI) / 10; 
+        var star_number = 5;
+        var star_points = star_number * 2 + 1;
+        var alpha = (2 * Math.PI) / (star_number * 2); 
         var radius = int.min(w, h) / 2;
         
-        for (var i = 11; i != 0; i--) {
+        for (var i = star_points; i != 0; i--) {
             var r = radius * (i % 2 + 1) / 2;
             var omega = alpha * i;
             layout.add_draw_dot((int) (r * Math.sin(omega)) + (x + w / 2), (int) (r * Math.cos(omega)) + (y + h / 2));
@@ -144,10 +146,12 @@ namespace Layouts {
         var layout = new Layout();
         init_layout(layout, x, y, w, h);
 
-        var alpha = (2 * Math.PI) / 10; 
+        var star_number = 5;
+        var star_points = star_number * 2 + 1;
+        var alpha = (2 * Math.PI) / (star_number * 2); 
         var radius = int.min(w, h) / 2;
         
-        for (var i = 11; i != 0; i--) {
+        for (var i = star_points; i != 0; i--) {
             if (i % 2 != 0) {
                 var r = radius * (i % 2 + 1) / 2;
                 var omega = alpha * i;
