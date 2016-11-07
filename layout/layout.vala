@@ -132,11 +132,16 @@ namespace Layouts {
         var star_points = star_number * 2 + 1;
         var alpha = (2 * Math.PI) / (star_number * 2); 
         var radius = int.min(w, h) / 2;
+        var scale = int.max(w, h) / int.min(w, h);
         
         for (var i = star_points; i != 0; i--) {
             var r = radius * (i % 2 + 1) / 2;
             var omega = alpha * i;
-            layout.add_draw_dot((int) (r * Math.sin(omega)) + (x + w / 2), (int) (r * Math.cos(omega)) + (y + h / 2));
+            if (w > h) {
+                layout.add_draw_dot((int) (r * Math.sin(omega) * scale) + (x + w / 2), (int) (r * Math.cos(omega)) + (y + h / 2));
+            } else {
+                layout.add_draw_dot((int) (r * Math.sin(omega)) + (x + w / 2), (int) (r * Math.cos(omega) * scale) + (y + h / 2));
+            }
         }
         
         return layout;
@@ -150,12 +155,17 @@ namespace Layouts {
         var star_points = star_number * 2 + 1;
         var alpha = (2 * Math.PI) / (star_number * 2); 
         var radius = int.min(w, h) / 2;
+        var scale = int.max(w, h) / int.min(w, h);
         
         for (var i = star_points; i != 0; i--) {
             if (i % 2 != 0) {
                 var r = radius * (i % 2 + 1) / 2;
                 var omega = alpha * i;
-                layout.add_draw_dot((int) (r * Math.sin(omega)) + (x + w / 2), (int) (r * Math.cos(omega)) + (y + h / 2));
+                if (w > h) {
+                    layout.add_draw_dot((int) (r * Math.sin(omega) * scale) + (x + w / 2), (int) (r * Math.cos(omega)) + (y + h / 2));
+                } else {
+                    layout.add_draw_dot((int) (r * Math.sin(omega)) + (x + w / 2), (int) (r * Math.cos(omega) * scale) + (y + h / 2));
+                }
             }
         }
         
