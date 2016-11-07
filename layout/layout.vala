@@ -127,43 +127,16 @@ namespace Layouts {
     public Layout create_five_pointed_star_layout(int x, int y, int w, int h) {
         var layout = new Layout();
         init_layout(layout, x, y, w, h);
-
-        int outside_y_offset = (int) Math.sqrt(((double) Math.pow(w, 2) * Math.pow(h, 2) + 4 * Math.pow(h, 4)) / ((double) 9 * Math.pow(w, 2) + 36 * Math.pow(h, 2)));
-        int outside_x_offset = (int) (((double) (outside_y_offset * w)) / ((double) (2 * h)));
-        int inside_y_offset = (int) ((Math.pow(w, 2) / 4 + Math.pow(h, 2)) / (2 * h));
-        int inside_b_y_offset = (int) (((double) (1 - ((double) 2 * outside_x_offset) / w)) / (((double) (1 / ((double) 2 * h))) + ((double) (1 / ((double) (inside_y_offset - outside_y_offset))))));
-        int inside_b_x_offset = (int) (w * inside_b_y_offset / (double) 2 / (double) h);
         
-        // Outside a dot.
-        layout.add_draw_dot(x + w / 2, y);
-
-        // Inisde a dot.
-        layout.add_draw_dot(x + w / 2 + outside_x_offset, y + outside_y_offset);
+        var alpha = (2 * Math.PI) / 10; 
+        var radius = int.min(w, h) / 2;
         
-        // Outside b dot.
-        layout.add_draw_dot(x + w, y + outside_y_offset);
-
-        // Inisde b dot.
-        layout.add_draw_dot(x + w / 2 + outside_x_offset + inside_b_x_offset, y + outside_y_offset + inside_b_y_offset);
+        for (var i = 11; i != 0; i--) {
+            var r = radius * (i % 2 + 1) / 2;
+            var omega = alpha * i;
+            layout.add_draw_dot((int) (r * Math.sin(omega)) + (x + w / 2), (int) (r * Math.cos(omega)) + (y + h / 2));
+        }
         
-        // Outside c dot.
-        layout.add_draw_dot(x + w, y + h);
-        
-        // Inisde c dot.
-        layout.add_draw_dot(x + w / 2, y + inside_y_offset);
-        
-        // Outside d dot.
-        layout.add_draw_dot(x, y + h);
-        
-        // Inisde d dot.
-        layout.add_draw_dot(x + w / 2 - outside_x_offset - inside_b_x_offset, y + outside_y_offset + inside_b_y_offset);
-        
-        // Outside e dot.
-        layout.add_draw_dot(x, y + outside_y_offset);
-        
-        // Inisde e dot.
-        layout.add_draw_dot(x + w / 2 - outside_x_offset, y + outside_y_offset);
-
         return layout;
     }
 
@@ -171,23 +144,16 @@ namespace Layouts {
         var layout = new Layout();
         init_layout(layout, x, y, w, h);
 
-        int outside_y_offset = (int) Math.sqrt(((double) Math.pow(w, 2) * Math.pow(h, 2) + 4 * Math.pow(h, 4)) / ((double) 9 * Math.pow(w, 2) + 36 * Math.pow(h, 2)));
-        int outside_x_offset = (int) (((double) (outside_y_offset * w)) / ((double) (2 * h)));
+        var alpha = (2 * Math.PI) / 10; 
+        var radius = int.min(w, h) / 2;
         
-        // Outside a dot.
-        layout.add_draw_dot(x + w / 2, y);
-
-        // Outside b dot.
-        layout.add_draw_dot(x + w, y + outside_y_offset);
-
-        // Outside c dot.
-        layout.add_draw_dot(x + w / 2 + outside_x_offset, y + h);
-        
-        // Outside d dot.
-        layout.add_draw_dot(x + w / 2 - outside_x_offset, y + h);
-        
-        // Outside e dot.
-        layout.add_draw_dot(x, y + outside_y_offset);
+        for (var i = 11; i != 0; i--) {
+            if (i % 2 != 0) {
+                var r = radius * (i % 2 + 1) / 2;
+                var omega = alpha * i;
+                layout.add_draw_dot((int) (r * Math.sin(omega)) + (x + w / 2), (int) (r * Math.cos(omega)) + (y + h / 2));
+            }
+        }
         
         return layout;
     }
