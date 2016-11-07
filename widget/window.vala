@@ -404,6 +404,12 @@ namespace Widgets {
                 return true;
             }
             
+            if (keyname == "Alt + l") {
+                workspace.page_manager.focus_page.start_add_layout("Line");
+                
+                return true;
+            }
+            
             if (keyname == "Esc") {
                 workspace.page_manager.focus_page.cancel_add_layout();
             }

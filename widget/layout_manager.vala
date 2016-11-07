@@ -24,6 +24,8 @@ namespace Widgets {
                 layout = Layouts.create_oval_layout(layout_type, x, y, w, h);
             } else if (layout_type == "Rounded_Rectangle") {
                 layout = Layouts.create_rounded_rectangle_layout(layout_type, x, y, w, h);
+            } else if (layout_type == "Line") {
+                layout = Layouts.create_line_layout(layout_type, x, y, w, h);
             }
             
             if (layout != null) {

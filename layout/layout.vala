@@ -253,4 +253,14 @@ namespace Layouts {
         
         return layout;
     }
+
+    public Layout create_line_layout(string type, int x, int y, int w, int h) {
+        var layout = new Layout();
+        init_layout(layout, type, x, y, w, h);
+        
+        layout.add_draw_dot(x, y);
+        layout.add_draw_dot(x + w, y + h);
+        
+        return layout;
+    }
 }
