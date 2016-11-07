@@ -22,6 +22,8 @@ namespace Widgets {
                 layout = Layouts.create_pentagon_layout(layout_type, x, y, w, h);
             } else if (layout_type == "Oval") {
                 layout = Layouts.create_oval_layout(layout_type, x, y, w, h);
+            } else if (layout_type == "Rounded_Rectangle") {
+                layout = Layouts.create_rounded_rectangle_layout(layout_type, x, y, w, h);
             }
             
             if (layout != null) {

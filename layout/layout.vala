@@ -4,10 +4,16 @@ namespace Layouts {
     public class DrawDot {
         public int x;
         public int y;
+        public double? radius;
+        public double? start_angle;
+        public double? end_angle;
 
-        public DrawDot(int dot_x, int dot_y) {
+        public DrawDot(int dot_x, int dot_y, double? r=null, double? sa=null, double? ea=null) {
             x = dot_x;
             y = dot_y;
+            radius = r;
+            start_angle = sa;
+            end_angle = ea;
         }
     }
 
@@ -73,23 +79,41 @@ namespace Layouts {
                 cr.stroke();
             } else if (draw_dots.size > 1) {
                 Utils.set_context_color(cr, background_color);
-                cr.move_to(draw_dots[0].x, draw_dots[0].y);
-                foreach (var dot in draw_dots[1:draw_dots.size]) {
-                    cr.line_to(dot.x, dot.y);
+                var first_draw_dot = draw_dots[0];
+                var rest_draw_dots = draw_dots[1:draw_dots.size];
+                if (first_draw_dot.radius != null) {
+                    cr.arc(first_draw_dot.x, first_draw_dot.y, first_draw_dot.radius, first_draw_dot.start_angle, first_draw_dot.end_angle);
+                } else {
+                    cr.move_to(first_draw_dot.x, first_draw_dot.y);
+                }
+                foreach (var draw_dot in rest_draw_dots) {
+                    if (draw_dot.radius != null) {
+                        cr.arc(draw_dot.x, draw_dot.y, draw_dot.radius, draw_dot.start_angle, draw_dot.end_angle);
+                    } else {
+                        cr.line_to(draw_dot.x, draw_dot.y);
+                    }
                 }
                 cr.close_path();
                 cr.fill();
                 
                 Utils.set_context_color(cr, frame_color);
-                cr.move_to(draw_dots[0].x, draw_dots[0].y);
-                foreach (var dot in draw_dots[1:draw_dots.size]) {
-                    cr.line_to(dot.x, dot.y);
+                if (first_draw_dot.radius != null) {
+                    cr.arc(first_draw_dot.x, first_draw_dot.y, first_draw_dot.radius, first_draw_dot.start_angle, first_draw_dot.end_angle);
+                } else {
+                    cr.move_to(first_draw_dot.x, first_draw_dot.y);
+                }
+                foreach (var draw_dot in rest_draw_dots) {
+                    if (draw_dot.radius != null) {
+                        cr.arc(draw_dot.x, draw_dot.y, draw_dot.radius, draw_dot.start_angle, draw_dot.end_angle);
+                    } else {
+                        cr.line_to(draw_dot.x, draw_dot.y);
+                    }
                 }
                 cr.close_path();
                 cr.stroke();
             }
         }
-
+        
         public void draw_drag_frame(Cairo.Context cr) {
             // Top left drag dot.
             draw_drag_dot(cr, x - drag_dot_size / 2, y - drag_dot_size / 2);
@@ -124,8 +148,8 @@ namespace Layouts {
             Draw.draw_rectangle(cr, x, y, drag_dot_size, drag_dot_size, false);
         }
 
-        public void add_draw_dot(int x, int y) {
-            var dot = new DrawDot(x, y);
+        public void add_draw_dot(int x, int y, double? r=null, double? sa=null, double? ea=null) {
+            var dot = new DrawDot(x, y, r, sa, ea);
             draw_dots.add(dot);
         }
     }
@@ -147,6 +171,20 @@ namespace Layouts {
         layout.add_draw_dot(x + w, y + h);
         layout.add_draw_dot(x, y + h);
 
+        return layout;
+    }
+
+    public Layout create_rounded_rectangle_layout(string type, int x, int y, int w, int h) {
+        var layout = new Layout();
+        init_layout(layout, type, x, y, w, h);
+
+        var r = 4;
+        
+        layout.add_draw_dot(x + w - r, y + r, r, Math.PI * 3 / 2, Math.PI * 2);
+        layout.add_draw_dot(x + w - r, y + h - r, r, 0, Math.PI / 2);
+        layout.add_draw_dot(x + r, y + h - r, r, Math.PI / 2, Math.PI);
+        layout.add_draw_dot(x + r, y + r, r, Math.PI, Math.PI * 3 / 2);
+        
         return layout;
     }
 

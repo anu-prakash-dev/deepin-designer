@@ -373,6 +373,12 @@ namespace Widgets {
                 
                 return true;
             }
+            
+            if (keyname == "Alt + Shift + r") {
+                workspace.page_manager.focus_page.start_add_layout("Rounded_Rectangle");
+                
+                return true;
+            }
 
             if (keyname == "Alt + t") {
                 workspace.page_manager.focus_page.start_add_layout("Triangle");
