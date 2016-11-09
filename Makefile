@@ -7,7 +7,7 @@ main: ./lib/animation.vala \
       ./lib/menu.vala \
       ./lib/utils.vala \
       ./lib/xutils.vala \
-      ./layout/layout.vala \
+      ./widget/layout.vala \
       ./widget/image_button.vala \
       ./widget/toolbar.vala \
       ./widget/page_panel.vala \
@@ -42,7 +42,7 @@ main: ./lib/animation.vala \
     ./lib/menu.vala \
     ./lib/utils.vala \
     ./lib/xutils.vala \
-    ./layout/layout.vala \
+    ./widget/layout.vala \
 	./widget/image_button.vala \
 	./widget/toolbar.vala \
 	./widget/page_panel.vala \
