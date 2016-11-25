@@ -246,38 +246,42 @@ namespace Layouts {
             } else if (type == "Five_Pointed_Star") {
                 clean_draw_dots();
                 
-                var star_number = 5;
-                var star_points = star_number * 2 + 1;
-                var alpha = (2 * Math.PI) / (star_number * 2); 
-                var radius = int.min(width, height) / 2;
-                var scale = int.max(width, height) / int.min(width, height);
+                if (width > 0 && height > 0) {
+                    var star_number = 5;
+                    var star_points = star_number * 2 + 1;
+                    var alpha = (2 * Math.PI) / (star_number * 2); 
+                    var radius = int.min(width, height) / 2;
+                    var scale = int.max(width, height) / int.min(width, height);
         
-                for (var i = star_points; i != 0; i--) {
-                    var r = radius * (i % 2 + 1) / 2;
-                    var omega = alpha * i;
-                    if (width > height) {
-                        add_draw_dot((int) (r * Math.sin(omega) * scale) + (x + width / 2), (int) (r * Math.cos(omega)) + (y + height / 2));
-                    } else {
-                        add_draw_dot((int) (r * Math.sin(omega)) + (x + width / 2), (int) (r * Math.cos(omega) * scale) + (y + height / 2));
-                    }
-                }
-            } else if (type == "Pentagon") {
-                clean_draw_dots();
-                
-                var star_number = 5;
-                var star_points = star_number * 2 + 1;
-                var alpha = (2 * Math.PI) / (star_number * 2); 
-                var radius = int.min(width, height) / 2;
-                var scale = int.max(width, height) / int.min(width, height);
-        
-                for (var i = star_points; i != 0; i--) {
-                    if (i % 2 != 0) {
+                    for (var i = star_points; i != 0; i--) {
                         var r = radius * (i % 2 + 1) / 2;
                         var omega = alpha * i;
                         if (width > height) {
                             add_draw_dot((int) (r * Math.sin(omega) * scale) + (x + width / 2), (int) (r * Math.cos(omega)) + (y + height / 2));
                         } else {
                             add_draw_dot((int) (r * Math.sin(omega)) + (x + width / 2), (int) (r * Math.cos(omega) * scale) + (y + height / 2));
+                        }
+                    }
+                }
+            } else if (type == "Pentagon") {
+                clean_draw_dots();
+                
+                if (width > 0 && height > 0) {
+                    var star_number = 5;
+                    var star_points = star_number * 2 + 1;
+                    var alpha = (2 * Math.PI) / (star_number * 2); 
+                    var radius = int.min(width, height) / 2;
+                    var scale = int.max(width, height) / int.min(width, height);
+                
+                    for (var i = star_points; i != 0; i--) {
+                        if (i % 2 != 0) {
+                            var r = radius * (i % 2 + 1) / 2;
+                            var omega = alpha * i;
+                            if (width > height) {
+                                add_draw_dot((int) (r * Math.sin(omega) * scale) + (x + width / 2), (int) (r * Math.cos(omega)) + (y + height / 2));
+                            } else {
+                                add_draw_dot((int) (r * Math.sin(omega)) + (x + width / 2), (int) (r * Math.cos(omega) * scale) + (y + height / 2));
+                            }
                         }
                     }
                 }
