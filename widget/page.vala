@@ -53,7 +53,7 @@ namespace Widgets {
                                     int draw_width = (int) Math.fabs(drag_start_x - drag_x);
                                     int draw_height = (int) Math.fabs(drag_start_y - drag_y);
                                 
-                                    focus_layout.update_track(draw_x, draw_y, draw_width, draw_height);
+                                    focus_layout.update_track(draw_x, draw_y, draw_width, draw_height, drag_x, drag_y);
                                 }
                             }
                         }

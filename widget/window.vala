@@ -410,6 +410,12 @@ namespace Widgets {
                 return true;
             }
             
+            if (keyname == "Alt + e") {
+                workspace.page_manager.focus_page.start_add_layout("Pencil");
+                
+                return true;
+            }
+            
             if (keyname == "Esc") {
                 workspace.page_manager.focus_page.cancel_add_layout();
             }
