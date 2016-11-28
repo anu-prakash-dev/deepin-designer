@@ -18,6 +18,16 @@ main: ./lib/animation.vala \
       ./widget/workspace.vala \
       ./widget/page_manager.vala \
       ./widget/page.vala \
+      ./widget/pencil_layout.vala \
+      ./widget/oval_layout.vala \
+      ./widget/image_layout.vala \
+      ./widget/text_layout.vala \
+      ./widget/pentagon_layout.vala \
+      ./widget/five_pointed_layout.vala \
+      ./widget/rounded_rectangle_layout.vala \
+      ./widget/rectangle_layout.vala \
+      ./widget/triangle_layout.vala \
+      ./widget/line_layout.vala \
       ./project_path.c \
       ./widget/window.vala \
       main.vala
@@ -53,6 +63,16 @@ main: ./lib/animation.vala \
 	./widget/workspace.vala \
 	./widget/page_manager.vala \
 	./widget/page.vala \
+    ./widget/pencil_layout.vala \
+    ./widget/oval_layout.vala \
+    ./widget/image_layout.vala \
+    ./widget/text_layout.vala \
+    ./widget/pentagon_layout.vala \
+    ./widget/five_pointed_layout.vala \
+    ./widget/rounded_rectangle_layout.vala \
+    ./widget/rectangle_layout.vala \
+    ./widget/triangle_layout.vala \
+    ./widget/line_layout.vala \
     ./project_path.c \
     ./widget/window.vala \
     main.vala
