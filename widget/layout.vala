@@ -18,72 +18,20 @@ namespace Layouts {
     }
 
     public class Layout {
-        public int x;
-        public int y;
-        public int width;
-        public int height;
-        public Gdk.RGBA frame_color;
-        public Gdk.RGBA background_color;
-        public Gdk.RGBA drag_dot_frame_color;
         public Gdk.RGBA drag_dot_background_color;
-        public int drag_dot_size = 6;
+        public Gdk.RGBA drag_dot_frame_color;
         public bool can_draw = false;
         public bool is_create_finish = false;
-
-        public ArrayList<DrawDot> draw_dots;
+        public int drag_dot_size = 6;
+        public int height;
+        public int width;
+        public int x;
+        public int y;
         public string type = "";
-
+        
         public Layout() {
-            background_color = Utils.hex_to_rgba("#303030", 0.1);
-            frame_color = Utils.hex_to_rgba("#ff0000", 0.1);
-
             drag_dot_frame_color = Utils.hex_to_rgba("#000000", 0.5);
             drag_dot_background_color = Utils.hex_to_rgba("#333333", 0.1);
-
-            draw_dots = new ArrayList<DrawDot>();
-        }
-
-        public virtual void draw_layout(Cairo.Context cr) {
-            if (can_draw) {
-                if (draw_dots.size > 1) {
-                    var first_draw_dot = draw_dots[0];
-                    var rest_draw_dots = draw_dots[1:draw_dots.size];
-
-                    if (is_create_finish) {
-                        Utils.set_context_color(cr, background_color);
-                        if (first_draw_dot.radius != null) {
-                            cr.arc(first_draw_dot.x, first_draw_dot.y, first_draw_dot.radius, first_draw_dot.start_angle, first_draw_dot.end_angle);
-                        } else {
-                            cr.move_to(first_draw_dot.x, first_draw_dot.y);
-                        }
-                        foreach (var draw_dot in rest_draw_dots) {
-                            if (draw_dot.radius != null) {
-                                cr.arc(draw_dot.x, draw_dot.y, draw_dot.radius, draw_dot.start_angle, draw_dot.end_angle);
-                            } else {
-                                cr.line_to(draw_dot.x, draw_dot.y);
-                            }
-                        }
-                        cr.close_path();
-                        cr.fill();
-                    }
-                
-                    Utils.set_context_color(cr, frame_color);
-                    if (first_draw_dot.radius != null) {
-                        cr.arc(first_draw_dot.x, first_draw_dot.y, first_draw_dot.radius, first_draw_dot.start_angle, first_draw_dot.end_angle);
-                    } else {
-                        cr.move_to(first_draw_dot.x, first_draw_dot.y);
-                    }
-                    foreach (var draw_dot in rest_draw_dots) {
-                        if (draw_dot.radius != null) {
-                            cr.arc(draw_dot.x, draw_dot.y, draw_dot.radius, draw_dot.start_angle, draw_dot.end_angle);
-                        } else {
-                            cr.line_to(draw_dot.x, draw_dot.y);
-                        }
-                    }
-                    cr.close_path();
-                    cr.stroke();
-                }
-            }
         }
         
         public void draw_drag_frame(Cairo.Context cr) {
@@ -125,6 +73,25 @@ namespace Layouts {
             Utils.set_context_color(cr, drag_dot_frame_color);
             Draw.draw_rectangle(cr, x, y, drag_dot_size, drag_dot_size, false);
         }
+        
+        public virtual void draw_layout(Cairo.Context cr) {
+        }
+        
+        public virtual void update_track(int drag_start_x, int drag_start_y, int drag_x, int drag_y) {
+        }
+    }
+
+    public class ShapeLayout : Layout {
+        public Gdk.RGBA frame_color;
+        public Gdk.RGBA background_color;
+        public ArrayList<DrawDot> draw_dots;
+
+        public ShapeLayout() {
+            background_color = Utils.hex_to_rgba("#303030", 0.1);
+            frame_color = Utils.hex_to_rgba("#ff0000", 0.1);
+
+            draw_dots = new ArrayList<DrawDot>();
+        }
 
         public void add_draw_dot(int x, int y, double? r=null, double? sa=null, double? ea=null) {
             var dot = new DrawDot(x, y, r, sa, ea);
@@ -149,11 +116,55 @@ namespace Layouts {
             height = draw_height;
         }
         
-        public virtual void update_track(int drag_start_x, int drag_start_y, int drag_x, int drag_y) {
+        public override void draw_layout(Cairo.Context cr) {
+            if (can_draw) {
+                if (draw_dots.size > 1) {
+                    var first_draw_dot = draw_dots[0];
+                    var rest_draw_dots = draw_dots[1:draw_dots.size];
+
+                    if (is_create_finish) {
+                        Utils.set_context_color(cr, background_color);
+                        if (first_draw_dot.radius != null) {
+                            cr.arc(first_draw_dot.x, first_draw_dot.y, first_draw_dot.radius, first_draw_dot.start_angle, first_draw_dot.end_angle);
+                        } else {
+                            cr.move_to(first_draw_dot.x, first_draw_dot.y);
+                        }
+                        
+                        foreach (var draw_dot in rest_draw_dots) {
+                            if (draw_dot.radius != null) {
+                                cr.arc(draw_dot.x, draw_dot.y, draw_dot.radius, draw_dot.start_angle, draw_dot.end_angle);
+                            } else {
+                                cr.line_to(draw_dot.x, draw_dot.y);
+                            }
+                        }
+                        cr.close_path();
+                        cr.fill();
+                    }
+                
+                    Utils.set_context_color(cr, frame_color);
+                    if (first_draw_dot.radius != null) {
+                        cr.arc(first_draw_dot.x, first_draw_dot.y, first_draw_dot.radius, first_draw_dot.start_angle, first_draw_dot.end_angle);
+                    } else {
+                        cr.move_to(first_draw_dot.x, first_draw_dot.y);
+                    }
+                    foreach (var draw_dot in rest_draw_dots) {
+                        if (draw_dot.radius != null) {
+                            cr.arc(draw_dot.x, draw_dot.y, draw_dot.radius, draw_dot.start_angle, draw_dot.end_angle);
+                        } else {
+                            cr.line_to(draw_dot.x, draw_dot.y);
+                        }
+                    }
+                    cr.close_path();
+                    cr.stroke();
+                }
+            }
+        }
+
+        public override void update_track(int drag_start_x, int drag_start_y, int drag_x, int drag_y) {
         }
     }
 
-    public class RectangleLayout : Layout {
+    public class RectangleLayout : ShapeLayout {
         public override void update_track(int drag_start_x, int drag_start_y, int drag_x, int drag_y) {
             update_size(drag_start_x, drag_start_y, drag_x, drag_y);
             
@@ -166,7 +177,7 @@ namespace Layouts {
         }
     }
 
-    public class RoundedRectangleLayout : Layout {
+    public class RoundedRectangleLayout : ShapeLayout {
         public override void update_track(int drag_start_x, int drag_start_y, int drag_x, int drag_y) {
             update_size(drag_start_x, drag_start_y, drag_x, drag_y);
             
@@ -181,7 +192,7 @@ namespace Layouts {
         }
     }
 
-    public class TriangleLayout : Layout {
+    public class TriangleLayout : ShapeLayout {
         public override void update_track(int drag_start_x, int drag_start_y, int drag_x, int drag_y) {
             update_size(drag_start_x, drag_start_y, drag_x, drag_y);
             
@@ -193,7 +204,7 @@ namespace Layouts {
         }
     }
 
-    public class FivePointedStarLayout : Layout {
+    public class FivePointedStarLayout : ShapeLayout {
         public override void update_track(int drag_start_x, int drag_start_y, int drag_x, int drag_y) {
             update_size(drag_start_x, drag_start_y, drag_x, drag_y);
             
@@ -219,7 +230,7 @@ namespace Layouts {
         }
     }
 
-    public class PentagonLayout : Layout {
+    public class PentagonLayout : ShapeLayout {
         public override void update_track(int drag_start_x, int drag_start_y, int drag_x, int drag_y) {
             update_size(drag_start_x, drag_start_y, drag_x, drag_y);
             
@@ -247,7 +258,7 @@ namespace Layouts {
         }
     }
 
-    public class LineLayout : Layout {
+    public class LineLayout : ShapeLayout {
         public override void update_track(int drag_start_x, int drag_start_y, int drag_x, int drag_y) {
             update_size(drag_start_x, drag_start_y, drag_x, drag_y);
             
@@ -258,7 +269,7 @@ namespace Layouts {
         }
     }
 
-    public class PencilLayout : Layout {
+    public class PencilLayout : ShapeLayout {
         public override void draw_layout(Cairo.Context cr) {
             if (can_draw) {
                 if (is_create_finish) {
@@ -343,7 +354,7 @@ namespace Layouts {
         }
     }
 
-    public class OvalLayout : Layout {
+    public class OvalLayout : ShapeLayout {
         public override void draw_layout(Cairo.Context cr) {
             if (can_draw) {
                 if (width > 0 && height > 0) {
