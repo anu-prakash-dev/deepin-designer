@@ -377,7 +377,7 @@ namespace Widgets {
                 return true;
             }
 
-            if (keyname == "Alt + i") {
+            if (keyname == "Alt + g") {
                 workspace.page_manager.focus_page.start_add_layout("Triangle");
                 return true;
             }
@@ -409,6 +409,11 @@ namespace Widgets {
             
             if (keyname == "Alt + t") {
                 workspace.page_manager.focus_page.start_add_layout("Text");
+                return true;
+            }
+            
+            if (keyname == "Alt + i") {
+                workspace.page_manager.focus_page.start_add_layout("Image");
                 return true;
             }
             

@@ -30,6 +30,8 @@ namespace Widgets {
                 layout = new Layouts.OvalLayout();
             } else if (layout_type == "Text") {
                 layout = new Layouts.TextLayout();
+            } else if (layout_type == "Image") {
+                layout = new Layouts.ImageLayout();
             } else {
                 print("Can't create layout with type: %s\n", layout_type);
                 
