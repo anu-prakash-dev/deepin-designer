@@ -2,7 +2,7 @@ using Gee;
 using Gtk;
 
 namespace Layouts {
-    public class DrawDot {
+    public class DrawDot : Object {
         public int x;
         public int y;
         public double? radius;

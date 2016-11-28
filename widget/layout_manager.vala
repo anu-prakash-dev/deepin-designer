@@ -3,7 +3,7 @@ using Gee;
 using Layouts;
 
 namespace Widgets {
-    public class LayoutManager {
+    public class LayoutManager : Object {
         public ArrayList<Layouts.Layout> layout_list;
         
         public LayoutManager() {

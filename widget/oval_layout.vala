@@ -1,7 +1,7 @@
 using Layouts;
 
 namespace Layouts {
-    public class OvalLayout : Layouts.ShapeLayout {
+    public class OvalLayout : ShapeLayout {
         public override void draw_layout(Cairo.Context cr) {
             if (can_draw) {
                 if (width > 0 && height > 0) {
