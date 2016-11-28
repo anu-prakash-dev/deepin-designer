@@ -83,6 +83,10 @@ namespace Layouts {
         public Gdk.RGBA frame_color;
         public Gdk.RGBA background_color;
         public ArrayList<DrawDot> draw_dots;
+        
+        public int move_save_x;
+        public int move_save_y;
+        public ArrayList<DrawDot> move_save_draw_dots;
 
         public ShapeLayout() {
             background_color = Utils.hex_to_rgba("#303030", 0.1);
@@ -100,12 +104,18 @@ namespace Layouts {
             draw_dots = new ArrayList<DrawDot>();
         }
         
-        public void update_position(int layout_x, int layout_y, ArrayList<DrawDot> layout_dots, int offset_x, int offset_y) {
-            x = layout_x + offset_x;
-            y = layout_y + offset_y;
+        public void save_position() {
+            move_save_x = x;
+            move_save_y = y;
+            move_save_draw_dots = draw_dots;
+        }
+        
+        public void update_position(int offset_x, int offset_y) {
+            x = move_save_x + offset_x;
+            y = move_save_y + offset_y;
             
             clean_draw_dots();
-            foreach (DrawDot dot in layout_dots) {
+            foreach (DrawDot dot in move_save_draw_dots) {
                 add_draw_dot(dot.x + offset_x,
                              dot.y + offset_y,
                              dot.radius,
