@@ -29,7 +29,7 @@ namespace Widgets {
                     drag_start_x = (int) e.x;
                     drag_start_y = (int) e.y;
                     
-                    if (layout_type == "Text" || layout_type == "Image") {
+                    if (layout_type == "Text") {
                         focus_layout = layout_manager.add_layout(layout_type);
                         focus_layout.update_track(this, drag_start_x, drag_start_y, null, null);
                     }
@@ -125,11 +125,16 @@ namespace Widgets {
         }
         
         public void start_add_layout(string type) {
-            layout_type = type;
-            focus_layout = null;
+            if (type == "Image") {
+                layout_type = type;
+                focus_layout = layout_manager.add_layout(layout_type);
+                focus_layout.update_track(this, 30, 30, null, null);
+            } else {
+                layout_type = type;
+                focus_layout = null;
 
-            set_layout_cursor();
-            
+                set_layout_cursor();
+            }
             queue_draw();
         }
         
