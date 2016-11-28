@@ -421,6 +421,8 @@ namespace Widgets {
                 workspace.page_manager.focus_page.cancel_add_layout();
                 return true;
             }
+            
+            workspace.page_manager.focus_page.handle_key_press(keyname);
                 
             return false;
         }
@@ -430,6 +432,8 @@ namespace Widgets {
                 if (Utils.is_command_exist("deepin-shortcut-viewer")) {
                     remove_shortcut_viewer();
                 }
+                
+                workspace.page_manager.focus_page.handle_key_release();
             }
         
             return false;

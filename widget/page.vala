@@ -1,4 +1,5 @@
 using Gtk;
+using Gee;
 
 namespace Widgets {
     public class Page : Gtk.DrawingArea {
@@ -12,7 +13,13 @@ namespace Widgets {
         public int? drag_start_y;
         public int? drag_x;
         public int? drag_y;
+        public int? shape_layout_save_x;
+        public int? shape_layout_save_y;
+        public ArrayList<Layouts.DrawDot>? shape_layout_save_dots;
+        public int? move_offset_start_x;
+        public int? move_offset_start_y;
         public bool first_move = false;
+        public bool first_offset = false;
         
         public Page() {
             layout_manager = new Widgets.LayoutManager();
@@ -44,7 +51,12 @@ namespace Widgets {
                         drag_x = (int) e.x;
                         drag_y = (int) e.y;
                         
-                        if (layout_type != null && layout_type != "Text" && layout_type != "Image") {
+                        if (first_offset && layout_type != "Text" && layout_type != "Image") {
+                            if (focus_layout != null && focus_layout.get_type().is_a(typeof(Layouts.ShapeLayout))) {
+                                ((Layouts.ShapeLayout) focus_layout).update_position(
+                                    shape_layout_save_x, shape_layout_save_y, shape_layout_save_dots, drag_x - move_offset_start_x, drag_y - move_offset_start_y);
+                            }
+                        } else if (layout_type != null && layout_type != "Text" && layout_type != "Image") {
                             if (!first_move) {
                                 if (drag_x != drag_start_x || drag_y != drag_start_y) {
                                     focus_layout = layout_manager.add_layout(layout_type);
@@ -77,16 +89,48 @@ namespace Widgets {
                     drag_start_y = null;
                     drag_x = null;
                     drag_y = null;
+                    
+                    move_offset_start_x = null;
+                    move_offset_start_y = null;
+                    shape_layout_save_x = null;
+                    shape_layout_save_y = null;
+                    shape_layout_save_dots = null;
                         
                     queue_draw();
                     
                     reset_cursor();
                     first_move = false;
+                    first_offset = false;
                     
                     return false;
                 });
             
             draw.connect(on_draw);
+        }
+        
+        public void handle_key_press(string keyname) {
+            if (!first_offset && focus_layout != null && focus_layout.get_type().is_a(typeof(Layouts.ShapeLayout)) && keyname == "Space") {
+                first_offset = true;
+                
+                move_offset_start_x = drag_x;
+                move_offset_start_y = drag_y;
+                
+                shape_layout_save_x = focus_layout.x;
+                shape_layout_save_y = focus_layout.y;
+                shape_layout_save_dots = ((Layouts.ShapeLayout) focus_layout).draw_dots;
+            }
+        }
+        
+        public void handle_key_release() {
+            if (first_offset) {
+                first_offset = false;
+            
+                move_offset_start_x = null;
+                move_offset_start_y = null;
+                shape_layout_save_x = null;
+                shape_layout_save_y = null;
+                shape_layout_save_dots = null;
+            }
         }
         
         private bool on_draw(Gtk.Widget widget, Cairo.Context cr) {

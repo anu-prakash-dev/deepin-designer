@@ -1,4 +1,5 @@
 using Gee;
+using Gtk;
 
 namespace Layouts {
     public class DrawDot {
@@ -17,7 +18,7 @@ namespace Layouts {
         }
     }
 
-    public abstract class Layout {
+    public abstract class Layout : Object {
         public Gdk.RGBA drag_dot_background_color;
         public Gdk.RGBA drag_dot_frame_color;
         public bool can_draw = false;
@@ -97,6 +98,20 @@ namespace Layouts {
         
         public void clean_draw_dots() {
             draw_dots = new ArrayList<DrawDot>();
+        }
+        
+        public void update_position(int layout_x, int layout_y, ArrayList<DrawDot> layout_dots, int offset_x, int offset_y) {
+            x = layout_x + offset_x;
+            y = layout_y + offset_y;
+            
+            clean_draw_dots();
+            foreach (DrawDot dot in layout_dots) {
+                add_draw_dot(dot.x + offset_x,
+                             dot.y + offset_y,
+                             dot.radius,
+                             dot.start_angle,
+                             dot.end_angle);
+            }
         }
         
         public void update_size(int drag_start_x, int drag_start_y, int drag_x, int drag_y) {
