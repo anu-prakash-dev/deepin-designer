@@ -84,9 +84,9 @@ namespace Layouts {
         public Gdk.RGBA background_color;
         public ArrayList<DrawDot> draw_dots;
         
-        public int move_save_x;
-        public int move_save_y;
-        public ArrayList<DrawDot> move_save_draw_dots;
+        public int? move_save_x;
+        public int? move_save_y;
+        public ArrayList<DrawDot>? move_save_draw_dots;
 
         public ShapeLayout() {
             background_color = Utils.hex_to_rgba("#303030", 0.1);
@@ -122,6 +122,12 @@ namespace Layouts {
                              dot.start_angle,
                              dot.end_angle);
             }
+        }
+        
+        public void clean_move_save_data() {
+            move_save_x = null;
+            move_save_y = null;
+            move_save_draw_dots = null;
         }
         
         public void update_size(int drag_start_x, int drag_start_y, int drag_x, int drag_y) {

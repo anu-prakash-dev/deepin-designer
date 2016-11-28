@@ -80,6 +80,10 @@ namespace Widgets {
                         
                         if (focus_layout != null) {
                             focus_layout.is_create_finish = true;
+                            
+                            if (focus_layout.get_type().is_a(typeof(Layouts.ShapeLayout))) {
+                                ((Layouts.ShapeLayout) focus_layout).clean_move_save_data();
+                            }
                         }
                     }
                     
