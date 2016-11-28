@@ -111,16 +111,20 @@ namespace Layouts {
         }
         
         public void update_position(int offset_x, int offset_y) {
-            x = move_save_x + offset_x;
-            y = move_save_y + offset_y;
+            if (move_save_x != null && move_save_y != null && move_save_draw_dots != null) {
+                x = move_save_x + offset_x;
+                y = move_save_y + offset_y;
             
-            clean_draw_dots();
-            foreach (DrawDot dot in move_save_draw_dots) {
-                add_draw_dot(dot.x + offset_x,
-                             dot.y + offset_y,
-                             dot.radius,
-                             dot.start_angle,
-                             dot.end_angle);
+                clean_draw_dots();
+                foreach (DrawDot dot in move_save_draw_dots) {
+                    add_draw_dot(dot.x + offset_x,
+                                 dot.y + offset_y,
+                                 dot.radius,
+                                 dot.start_angle,
+                                 dot.end_angle);
+                }
+            } else {
+                print("WARNING: layout.update_position: move save variable is null.\n");
             }
         }
         
