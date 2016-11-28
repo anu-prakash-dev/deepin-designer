@@ -364,60 +364,57 @@ namespace Widgets {
                 
             if (keyname == "F1") {
                 Utils.show_manual();
-                
                 return true;
             }
             
             if (keyname == "Alt + r") {
                 workspace.page_manager.focus_page.start_add_layout("Rectangle");
-                
                 return true;
             }
             
             if (keyname == "Alt + Shift + r") {
                 workspace.page_manager.focus_page.start_add_layout("Rounded_Rectangle");
-                
                 return true;
             }
 
-            if (keyname == "Alt + t") {
+            if (keyname == "Alt + i") {
                 workspace.page_manager.focus_page.start_add_layout("Triangle");
-                
                 return true;
             }
 
             if (keyname == "Alt + f") {
                 workspace.page_manager.focus_page.start_add_layout("Five_Pointed_Star");
-                
                 return true;
             }
             
             if (keyname == "Alt + p") {
                 workspace.page_manager.focus_page.start_add_layout("Pentagon");
-                
                 return true;
             }
             
             if (keyname == "Alt + o") {
                 workspace.page_manager.focus_page.start_add_layout("Oval");
-                
                 return true;
             }
             
             if (keyname == "Alt + l") {
                 workspace.page_manager.focus_page.start_add_layout("Line");
-                
                 return true;
             }
             
             if (keyname == "Alt + e") {
                 workspace.page_manager.focus_page.start_add_layout("Pencil");
-                
+                return true;
+            }
+            
+            if (keyname == "Alt + t") {
+                workspace.page_manager.focus_page.start_add_layout("Text");
                 return true;
             }
             
             if (keyname == "Esc") {
                 workspace.page_manager.focus_page.cancel_add_layout();
+                return true;
             }
                 
             return false;

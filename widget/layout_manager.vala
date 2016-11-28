@@ -28,9 +28,14 @@ namespace Widgets {
                 layout = new Layouts.PencilLayout();
             } else if (layout_type == "Oval") {
                 layout = new Layouts.OvalLayout();
+            } else if (layout_type == "Text") {
+                layout = new Layouts.TextLayout();
             } else {
-                layout = new Layouts.Layout();
+                print("Can't create layout with type: %s\n", layout_type);
+                
+                return null;
             }
+            
             layout.type = layout_type;
             
             layout_list.add(layout);
