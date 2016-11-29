@@ -34,8 +34,7 @@ namespace Widgets {
                     drag_start_y = (int) e.y;
                     
                     if (layout_type == "Text") {
-                        focus_layout = layout_manager.add_layout(layout_type);
-                        focus_layout.update_track(this, drag_start_x, drag_start_y, null, null);
+                        add_text_layout();
                     }
                         
                     queue_draw();
@@ -48,24 +47,15 @@ namespace Widgets {
                         drag_x = (int) e.x;
                         drag_y = (int) e.y;
                         
-                        if (layout_type != "Text" && layout_type != "Image") {
+                        if (layout_type != null && layout_type != "Text" && layout_type != "Image") {
                             if (first_layout_move) {
-                                if (focus_layout != null && focus_layout.get_type().is_a(typeof(Layouts.ShapeLayout))) {
-                                    ((Layouts.ShapeLayout) focus_layout).update_position(drag_x - move_offset_start_x, drag_y - move_offset_start_y);
-                                }
-                            } else if (layout_type != null) {
-                                if (!first_mouse_move) {
-                                    if (drag_x != drag_start_x || drag_y != drag_start_y) {
-                                        focus_layout = layout_manager.add_layout(layout_type);
-                                
-                                        first_mouse_move = true;
-                                    }
-                                } else {
-                                    if (focus_layout != null) {
-                                        focus_layout.update_track(this, drag_start_x, drag_start_y, drag_x, drag_y);
-                                    }
-                                }
+                                create_move_shape_layout(drag_x, drag_y);
+                            } else if (!first_mouse_move) {
+                                add_shape_layout();
+                            } else {
+                                create_resize_shape_layout(drag_x, drag_y);
                             }
+                            
                         }
                         
                         queue_draw();
@@ -160,17 +150,45 @@ namespace Widgets {
         }
         
         public void start_add_layout(string type) {
+            layout_type = type;
+            
             if (type == "Image") {
-                layout_type = type;
-                focus_layout = layout_manager.add_layout(layout_type);
-                focus_layout.update_track(this, 30, 30, null, null);
+                add_image_layout();
             } else {
-                layout_type = type;
                 focus_layout = null;
 
                 set_layout_cursor();
             }
             queue_draw();
+        }
+
+        public void add_image_layout() {
+            focus_layout = layout_manager.add_layout(layout_type);
+            focus_layout.update_track(this, 30, 30, null, null);
+        }
+        
+        public void add_text_layout() {
+            focus_layout = layout_manager.add_layout(layout_type);
+            focus_layout.update_track(this, drag_start_x, drag_start_y, null, null);
+        }
+        
+        public void add_shape_layout() {
+            if (drag_x != drag_start_x || drag_y != drag_start_y) {
+                focus_layout = layout_manager.add_layout(layout_type);
+                first_mouse_move = true;
+            }
+        }
+        
+        public void create_resize_shape_layout(int drag_x, int drag_y) {
+            if (focus_layout != null) {
+                focus_layout.update_track(this, drag_start_x, drag_start_y, drag_x, drag_y);
+            }
+        }
+        
+        public void create_move_shape_layout(int drag_x, int drag_y) {
+            if (focus_layout != null && focus_layout.get_type().is_a(typeof(Layouts.ShapeLayout))) {
+                ((Layouts.ShapeLayout) focus_layout).update_position(drag_x - move_offset_start_x, drag_y - move_offset_start_y);
+            }
         }
         
         public void cancel_add_layout() {
