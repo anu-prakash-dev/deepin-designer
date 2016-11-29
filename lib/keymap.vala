@@ -24,13 +24,12 @@
 using GLib;
 
 namespace Keymap {
-	
-    public string get_keyevent_name(Gdk.EventKey key_event) {
+    public string get_keyevent_name(Gdk.EventKey key_event, bool to_upper=false) {
         if ((key_event.is_modifier) != 0) {
             return "";
         } else {
-            var key_modifiers = get_key_event_modifiers(key_event);
-            var key_name = get_key_name(key_event.keyval);
+            var key_modifiers = get_key_event_modifiers(key_event, to_upper);
+            var key_name = get_key_name(key_event.keyval, to_upper);
             
             if (key_modifiers.length == 0) {
                 return key_name;
@@ -46,7 +45,7 @@ namespace Keymap {
         }
     }
 
-    public string[] get_key_event_modifiers(Gdk.EventKey key_event) {
+    public string[] get_key_event_modifiers(Gdk.EventKey key_event, bool to_upper=false) {
         string[] modifiers = {};
 
         if ((key_event.state & Gdk.ModifierType.CONTROL_MASK) != 0) {
@@ -65,15 +64,24 @@ namespace Keymap {
             modifiers += "Alt";
         }
         
-        if ((key_event.state & Gdk.ModifierType.SHIFT_MASK) != 0) {
+        if ((key_event.state & Gdk.ModifierType.SHIFT_MASK) != 0 && !to_upper) {
             modifiers += "Shift";
         }
         
         return modifiers;
     }
 
-    public string get_key_name(uint keyval) {
-        unichar key_unicode = Gdk.keyval_to_unicode(Gdk.keyval_to_lower(keyval));
+    public string get_char_name(Gdk.EventKey key_event) {
+        return get_key_name(key_event.keyval, ((key_event.state & Gdk.ModifierType.SHIFT_MASK) != 0));
+    }
+
+    public string get_key_name(uint keyval, bool to_upper=false) {
+        unichar? key_unicode;
+        if (to_upper) {
+            key_unicode = Gdk.keyval_to_unicode(Gdk.keyval_to_upper(keyval));
+        } else {
+            key_unicode = Gdk.keyval_to_unicode(Gdk.keyval_to_lower(keyval));
+        }
         
         if (key_unicode == 0) {  // function keys at top line of keyboard
             var keyname = Gdk.keyval_name(keyval);
@@ -102,19 +110,12 @@ namespace Keymap {
         }
     }
 
-    public bool has_ctrl_mask(Gdk.EventKey key_event) {
-        string[] mask_list = {"Control_L", "Control_R"};
-        
-        return get_key_name(key_event.keyval) in mask_list;
-    }
-
-    public bool has_shift_mask(Gdk.EventKey key_event) {
-        string[] mask_list = {"Shift_L", "Shift_R"};
-        return get_key_name(key_event.keyval) in mask_list;
-    }
-
 	public bool is_no_key_press(Gdk.EventKey key_event) {
 		return (key_event.is_modifier == 0 && get_key_name(key_event.keyval) == get_keyevent_name(key_event) ||
 				key_event.is_modifier != 0 && get_key_event_modifiers(key_event).length == 1);
 	}
+
+    public bool is_char(Gdk.EventKey key_event) {
+        return Keymap.get_keyevent_name(key_event, true).length == 1;
+    }
 }

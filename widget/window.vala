@@ -367,7 +367,7 @@ namespace Widgets {
                 return true;
             }
             
-            return workspace.page_manager.focus_page.handle_key_press(keyname);
+            return workspace.page_manager.focus_page.handle_key_press(key_event);
         }
 
         private bool on_key_release(Gtk.Widget widget, Gdk.EventKey key_event) {

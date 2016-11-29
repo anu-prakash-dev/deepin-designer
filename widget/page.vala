@@ -100,9 +100,11 @@ namespace Widgets {
             draw.connect(on_draw);
         }
         
-        public bool handle_key_press(string keyname) {
+        public bool handle_key_press(Gdk.EventKey key_event) {
+            string keyname = Keymap.get_keyevent_name(key_event);
+            
             if (layout_type == "Text" && focus_layout != null && !focus_layout.is_create_finish) {
-                if (((Layouts.TextLayout) focus_layout).handle_key_press(keyname)) {
+                if (((Layouts.TextLayout) focus_layout).handle_key_press(key_event)) {
                     queue_draw();
                 }
                 

@@ -100,8 +100,13 @@ namespace Layouts {
             cr.restore();
         }
         
-        public bool handle_key_press(string keyname) {
-            if (keyname == "Ctrl + f" || keyname == "Right") {
+        public bool handle_key_press(Gdk.EventKey key_event) {
+            string keyname = Keymap.get_keyevent_name(key_event);
+
+            if (Keymap.is_char(key_event)) {
+                insert_char(Keymap.get_char_name(key_event));
+                return true;
+            } else if (keyname == "Ctrl + f" || keyname == "Right") {
                 forward_char();
                 return true;
             } else if (keyname == "Ctrl + b" || keyname == "Left") {
@@ -146,12 +151,86 @@ namespace Layouts {
 			} else if (keyname == "Alt + b") {
 				backward_word();
                 return true;
-			} else if (keyname == "Esc") {
+			} else if (keyname == "Delete") {
+                delete_selected();
+                return true;
+            } else if (keyname == "Backspace") {
+                backspace_delete();
+                return true;
+            } else if (keyname == "Ctrl + v") {
+                paste();
+                return true;
+            } else if (keyname == "Esc") {
                 is_create_finish = true;
+                return true;
+            } else if (keyname == "Enter") {
+                insert_char("\n");
+                return true;
+            } else if (keyname == "Space") {
+                insert_char(" ");
                 return true;
             }
             
             return false;
+        }
+        
+        public void insert_char(string char) {
+            if (insert_cursor_index != select_cursor_index || insert_cursor_trailing != select_cursor_trailing) {
+                delete_selected();
+            }
+
+            text = "%s%s%s".printf(text.substring(0, insert_cursor_index), char, text.substring(insert_cursor_index, text.char_count() - insert_cursor_index));
+            
+            insert_cursor_index += char.char_count();
+            
+            sync_cursors();
+        }
+        
+        public void paste() {
+            if (insert_cursor_index != select_cursor_index || insert_cursor_trailing != select_cursor_trailing) {
+                delete_selected();
+            }
+
+            var clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD);
+            var current_clipboard_text = clipboard.wait_for_text();
+
+            text = "%s%s%s".printf(text.substring(0, insert_cursor_index), current_clipboard_text, text.substring(insert_cursor_index, text.char_count() - insert_cursor_index));
+            
+            insert_cursor_index += current_clipboard_text.char_count();
+            
+            sync_cursors();
+        }
+        
+        public void delete_selected() {
+            int select_start_index = int.min(insert_cursor_index, select_cursor_index);
+            int select_start_trailing = int.min(insert_cursor_trailing, select_cursor_trailing);
+            int select_end_index = int.max(insert_cursor_index, select_cursor_index);
+            
+            text = "%s%s".printf(text.substring(0, select_start_index), text.substring(select_end_index, text.char_count() - select_end_index));
+            
+            insert_cursor_index = select_start_index;
+            insert_cursor_trailing = select_start_trailing;
+            
+            sync_cursors();
+        }
+        
+        public void backspace_delete() {
+            if (insert_cursor_index != select_cursor_index || insert_cursor_trailing != select_cursor_trailing) {
+                delete_selected();
+            } else {
+                int new_index, new_trailing;
+                layout.move_cursor_visually(true, insert_cursor_index, insert_cursor_trailing, -1, out new_index, out new_trailing);
+                
+                print("***** %i(%i) %i(%i) %i\n", insert_cursor_index, insert_cursor_trailing, new_index, new_trailing, text.char_count());
+                if (new_index >= 0) {
+                    text = "%s%s".printf(text.substring(0, new_index), text.substring(insert_cursor_index, text.char_count() - insert_cursor_index));
+                    
+                    insert_cursor_index = new_index;
+                    insert_cursor_trailing = new_trailing;
+                    
+                    sync_cursors();
+                }
+            }
         }
         
         public void select_all() {
@@ -398,6 +477,8 @@ namespace Layouts {
                 
             x = drag_start_x;
             y = drag_start_y;
+            
+            select_all();
         }
     }
 }
