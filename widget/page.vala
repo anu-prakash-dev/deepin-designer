@@ -11,6 +11,8 @@ namespace Widgets {
         public string? layout_type;
         public int? drag_start_x;
         public int? drag_start_y;
+        public int? drag_start_save_x;
+        public int? drag_start_save_y;
         public int? drag_x;
         public int? drag_y;
         public int? move_offset_start_x;
@@ -101,6 +103,9 @@ namespace Widgets {
             if (!first_layout_move && focus_layout != null && focus_layout.get_type().is_a(typeof(Layouts.ShapeLayout)) && keyname == "Space") {
                 first_layout_move = true;
                 
+                drag_start_save_x = drag_start_x;
+                drag_start_save_y = drag_start_y;
+                
                 move_offset_start_x = drag_x;
                 move_offset_start_y = drag_y;
                 
@@ -111,6 +116,9 @@ namespace Widgets {
         public void handle_key_release() {
             if (first_layout_move) {
                 first_layout_move = false;
+                
+                drag_start_save_x = null;
+                drag_start_save_y = null;
             }
         }
         
@@ -188,6 +196,9 @@ namespace Widgets {
         public void create_move_shape_layout(int drag_x, int drag_y) {
             if (focus_layout != null && focus_layout.get_type().is_a(typeof(Layouts.ShapeLayout))) {
                 ((Layouts.ShapeLayout) focus_layout).update_position(drag_x - move_offset_start_x, drag_y - move_offset_start_y);
+                
+                drag_start_x = drag_start_save_x + drag_x - move_offset_start_x;
+                drag_start_y = drag_start_save_y + drag_y - move_offset_start_y;
             }
         }
         
