@@ -222,13 +222,8 @@ namespace Layouts {
                 int new_index, new_trailing;
                 layout.move_cursor_visually(true, insert_cursor_index, insert_cursor_trailing, -1, out new_index, out new_trailing);
                 
-                print("***** %i(%i) %i(%i) %i\n", insert_cursor_index, insert_cursor_trailing, new_index, new_trailing, text.char_count());
                 if (new_index >= 0) {
-                    text = text.splice(new_index, insert_cursor_index);
-                    // if (new_index == insert_cursor_index && insert_cursor_trailing == 1) {
-                    //     text = text.splice(new_index, insert_cursor_index + insert_cursor_trailing);
-                    // } else {
-                    // }
+                    text = text.splice(new_index + new_trailing, insert_cursor_index + insert_cursor_trailing);
                     
                     insert_cursor_index = new_index;
                     insert_cursor_trailing = new_trailing;
