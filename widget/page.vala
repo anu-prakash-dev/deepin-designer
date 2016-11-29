@@ -68,10 +68,11 @@ namespace Widgets {
             
             button_release_event.connect((w, e) => {
                     if (layout_type != null) {
-                        layout_type = null;
-                        
                         if (focus_layout != null) {
-                            focus_layout.is_create_finish = true;
+                            if (layout_type != "Text") {
+                                layout_type = null;
+                                focus_layout.is_create_finish = true;
+                            }
                             
                             if (focus_layout.get_type().is_a(typeof(Layouts.ShapeLayout))) {
                                 ((Layouts.ShapeLayout) focus_layout).clean_move_save_data();
@@ -175,6 +176,7 @@ namespace Widgets {
         public void add_image_layout() {
             focus_layout = layout_manager.add_layout(layout_type);
             focus_layout.update_track(this, 30, 30, null, null);
+            focus_layout.is_create_finish = true;
         }
         
         public void add_text_layout() {
@@ -205,8 +207,16 @@ namespace Widgets {
         }
         
         public void cancel_add_layout() {
+            if (layout_type == "Text") {
+                if (focus_layout != null) {
+                    focus_layout.is_create_finish = true;
+                }
+            }
+            
             layout_type = null;
             reset_cursor();
+            
+            queue_draw();
         }
         
         public void set_layout_cursor() {

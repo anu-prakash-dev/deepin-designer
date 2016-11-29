@@ -34,8 +34,6 @@ namespace Layouts {
                         
                     width = image_surface.get_width();
                     height = image_surface.get_height();
-                        
-                    is_create_finish = true;
                     break;
                 }
             }
