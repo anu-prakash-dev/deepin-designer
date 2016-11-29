@@ -70,13 +70,34 @@ namespace Layouts {
             } else if (keyname == "Ctrl + p" || keyname == "Up") {
                 prev_line();
                 return true;
-            } else if (keyname == "Ctrl + a" || keyname == "Home") {
+            } else if (keyname == "Home") {
 				move_beginning_of_line();
                 return true;
-			} else if (keyname == "Ctrl + e" || keyname == "End") {
+			} else if (keyname == "End") {
 				move_end_of_line();
                 return true;
-			} else if (keyname == "Alt + f") {
+			} else if (keyname == "Ctrl + a") {
+                select_all();
+                return true;
+            } else if (keyname == "Shift + Left") {
+                select_backward_char();
+                return true;
+            } else if (keyname == "Shift + Right") {
+                select_forward_char();
+                return true;
+            } else if (keyname == "Shift + Up") {
+                select_prev_line();
+                return true;
+            } else if (keyname == "Shift + Down") {
+                select_next_line();
+                return true;
+            } else if (keyname == "Shift + Home") {
+                select_to_beginning_of_line();
+                return true;
+            } else if (keyname == "Shift + End") {
+                select_to_end_of_line();
+                return true;
+            } else if (keyname == "Alt + f") {
 				forward_word();
                 return true;
 			} else if (keyname == "Alt + b") {
@@ -88,6 +109,34 @@ namespace Layouts {
             }
             
             return false;
+        }
+        
+        public void select_forward_char() {
+            print("Select forward char\n");
+        }
+        
+        public void select_all() {
+            print("Select all\n");
+        }
+        
+        public void select_backward_char() {
+            print("Select backward char\n");
+        }
+        
+        public void select_next_line() {
+            print("Select next line\n");
+        }
+        
+        public void select_prev_line() {
+            print("Select prev line\n");
+        }
+        
+        public void select_to_beginning_of_line() {
+            print("Select beginning of line\n");
+        }
+        
+        public void select_to_end_of_line() {
+            print("Select end of line\n");
         }
         
 		public bool forward_char() {
