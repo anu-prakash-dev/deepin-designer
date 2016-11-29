@@ -432,9 +432,9 @@ namespace Widgets {
                 if (Utils.is_command_exist("deepin-shortcut-viewer")) {
                     remove_shortcut_viewer();
                 }
-                
-                workspace.page_manager.focus_page.handle_key_release();
             }
+            
+            workspace.page_manager.focus_page.handle_key_release(key_event);
         
             return false;
         }
