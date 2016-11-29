@@ -179,7 +179,7 @@ namespace Layouts {
                 delete_selected();
             }
 
-            text = "%s%s%s".printf(text.substring(0, insert_cursor_index), char, text.substring(insert_cursor_index, text.char_count() - insert_cursor_index));
+            text = text.splice(insert_cursor_index, insert_cursor_index, char);
             
             insert_cursor_index += char.char_count();
             
@@ -194,7 +194,7 @@ namespace Layouts {
             var clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD);
             var current_clipboard_text = clipboard.wait_for_text();
 
-            text = "%s%s%s".printf(text.substring(0, insert_cursor_index), current_clipboard_text, text.substring(insert_cursor_index, text.char_count() - insert_cursor_index));
+            text = text.splice(insert_cursor_index, insert_cursor_index, current_clipboard_text);
             
             insert_cursor_index += current_clipboard_text.char_count();
             
@@ -205,8 +205,9 @@ namespace Layouts {
             int select_start_index = int.min(insert_cursor_index, select_cursor_index);
             int select_start_trailing = int.min(insert_cursor_trailing, select_cursor_trailing);
             int select_end_index = int.max(insert_cursor_index, select_cursor_index);
+            int select_end_trailing = int.max(insert_cursor_trailing, select_cursor_trailing);
             
-            text = "%s%s".printf(text.substring(0, select_start_index), text.substring(select_end_index, text.char_count() - select_end_index));
+            text = text.splice(select_start_index, select_end_index + select_end_trailing);
             
             insert_cursor_index = select_start_index;
             insert_cursor_trailing = select_start_trailing;
@@ -223,7 +224,11 @@ namespace Layouts {
                 
                 print("***** %i(%i) %i(%i) %i\n", insert_cursor_index, insert_cursor_trailing, new_index, new_trailing, text.char_count());
                 if (new_index >= 0) {
-                    text = "%s%s".printf(text.substring(0, new_index), text.substring(insert_cursor_index, text.char_count() - insert_cursor_index));
+                    text = text.splice(new_index, insert_cursor_index);
+                    // if (new_index == insert_cursor_index && insert_cursor_trailing == 1) {
+                    //     text = text.splice(new_index, insert_cursor_index + insert_cursor_trailing);
+                    // } else {
+                    // }
                     
                     insert_cursor_index = new_index;
                     insert_cursor_trailing = new_trailing;
