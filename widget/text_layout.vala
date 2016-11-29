@@ -2,7 +2,7 @@ using Layouts;
 
 namespace Layouts {
     public class TextLayout : Layout {
-        public string text = "Type \nsomething\ntest";
+        public string text = "Type something";
         public int text_size = 20;
         public int line_height = 42;
         public Gdk.RGBA text_color;
