@@ -273,12 +273,6 @@ namespace Widgets {
         }
         
         public void cancel_add_layout() {
-            if (layout_type == "Text") {
-                if (focus_layout != null) {
-                    focus_layout.is_create_finish = true;
-                }
-            }
-            
             layout_type = null;
             reset_cursor();
             

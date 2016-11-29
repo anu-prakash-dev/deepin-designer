@@ -44,13 +44,15 @@ namespace Layouts {
             cr.move_to(x, render_y);
             Pango.cairo_update_layout(cr, layout);
             Pango.cairo_show_layout(cr, layout);
-            
+
             // Draw cursor.
-			int[] index_coordinate = index_to_line_x(cursor_index, cursor_trailing);
-			int line = index_coordinate[0];
-			int x_pos = index_coordinate[1];
-            Utils.set_context_color(cr, cursor_color);
-			Draw.draw_rectangle(cr, x + x_pos / Pango.SCALE, y + line * line_height, cursor_width, line_height);
+            if (!is_create_finish) {
+                int[] index_coordinate = index_to_line_x(cursor_index, cursor_trailing);
+                int line = index_coordinate[0];
+                int x_pos = index_coordinate[1];
+                Utils.set_context_color(cr, cursor_color);
+                Draw.draw_rectangle(cr, x + x_pos / Pango.SCALE, y + line * line_height, cursor_width, line_height);
+            }
             
             cr.restore();
         }
@@ -80,7 +82,10 @@ namespace Layouts {
 			} else if (keyname == "Alt + b") {
 				backward_word();
                 return true;
-			}
+			} else if (keyname == "Esc") {
+                is_create_finish = true;
+                return true;
+            }
             
             return false;
         }
