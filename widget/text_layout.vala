@@ -2,28 +2,35 @@ using Layouts;
 
 namespace Layouts {
     public class TextLayout : Layout {
-        public string text = "Type \nsomething";
+        public string text = "Type \nsomething\ntest";
         public int text_size = 20;
         public int line_height = 42;
         public Gdk.RGBA text_color;
-        public Gdk.RGBA cursor_color;
         public int cursor_width = 2;
-        public int cursor_index = 0;
-		public int cursor_trailing = 0;
-		public int column_offset = 0;
+        
+        public Gdk.RGBA insert_cursor_color;
+        public int insert_cursor_index = 0;
+		public int insert_cursor_trailing = 0;
+		public int insert_cursor_column_offset = 0;
+
+        public Gdk.RGBA select_cursor_color;
+        public int select_cursor_index = 0;
+        public int select_cursor_trailing = 0;
+        public int select_cursor_column_offset = 0;
+        
 		public Pango.Layout layout;		
             
         public TextLayout() {
             text_color = Utils.hex_to_rgba("#000000", 1.0);
-            cursor_color = Utils.hex_to_rgba("#ff1e00", 1.0);
+            
+            insert_cursor_color = Utils.hex_to_rgba("#ff1e00", 1.0);
+            select_cursor_color = Utils.hex_to_rgba("#00ffff", 1.0);
         }
             
         public override void draw_layout(Cairo.Context cr) {
             cr.save();
             
-            // Draw text.
-            Utils.set_context_color(cr, text_color);
-                
+            // Init text.
             var font_description = new Pango.FontDescription();
             font_description.set_size((int)(text_size * Pango.SCALE));
             
@@ -41,16 +48,52 @@ namespace Layouts {
             int render_y;
             render_y = y + int.max(0, (height - text_height) / 2);
             
+            // Draw select bound.
+            if (!is_create_finish) {
+                if (insert_cursor_index != select_cursor_index || insert_cursor_trailing != select_cursor_trailing) {
+                    int select_start_index = int.min(insert_cursor_index, select_cursor_index);
+                    int select_start_trailing = int.min(insert_cursor_trailing, select_cursor_trailing);
+                    int[] select_start_index_coordinate = index_to_line_x(select_start_index, select_start_trailing);
+                    int sx = x + select_start_index_coordinate[1] / Pango.SCALE;
+                    int sy = y + select_start_index_coordinate[0] * line_height;
+                    
+                    int select_end_index = int.max(insert_cursor_index, select_cursor_index);
+                    int select_end_trailing = int.max(insert_cursor_trailing, select_cursor_trailing);
+                    int[] select_end_index_coordinate = index_to_line_x(select_end_index, select_end_trailing);
+                    int ex = x + select_end_index_coordinate[1] / Pango.SCALE;
+                    int ey = y + select_end_index_coordinate[0] * line_height;
+                    
+                    Utils.set_context_color(cr, select_cursor_color);
+                    if (sy == ey) {
+                        Draw.draw_rectangle(cr, sx, sy, ex - sx, line_height);
+                    } else {
+                        cr.move_to(sx, sy);
+                        cr.line_to(x + text_width, sy);
+                        cr.line_to(x + text_width, ey);
+                        cr.line_to(ex, ey);
+                        cr.line_to(ex, ey + line_height);
+                        cr.line_to(x, ey + line_height);
+                        cr.line_to(x, sy + line_height);
+                        cr.line_to(sx, sy + line_height);
+                        cr.close_path();
+                        
+                        cr.fill();
+                    }
+                }
+            }
+
+            // Draw text.
+            Utils.set_context_color(cr, text_color);
             cr.move_to(x, render_y);
             Pango.cairo_update_layout(cr, layout);
             Pango.cairo_show_layout(cr, layout);
-
+            
             // Draw cursor.
             if (!is_create_finish) {
-                int[] index_coordinate = index_to_line_x(cursor_index, cursor_trailing);
+                int[] index_coordinate = index_to_line_x(insert_cursor_index, insert_cursor_trailing);
                 int line = index_coordinate[0];
                 int x_pos = index_coordinate[1];
-                Utils.set_context_color(cr, cursor_color);
+                Utils.set_context_color(cr, insert_cursor_color);
                 Draw.draw_rectangle(cr, x + x_pos / Pango.SCALE, y + line * line_height, cursor_width, line_height);
             }
             
@@ -111,56 +154,71 @@ namespace Layouts {
             return false;
         }
         
-        public void select_forward_char() {
-            print("Select forward char\n");
+        public void select_all() {
+            select_cursor_index = 0;
+            select_cursor_trailing = 0;
+            
+            insert_cursor_index = text.char_count() - 1;
+            insert_cursor_trailing = 1;
         }
         
-        public void select_all() {
-            print("Select all\n");
+        public void select_forward_char() {
+            forward_char_internal();
         }
         
         public void select_backward_char() {
-            print("Select backward char\n");
+            backward_char_internal();
         }
         
         public void select_next_line() {
-            print("Select next line\n");
+            next_line_internal();
         }
         
         public void select_prev_line() {
-            print("Select prev line\n");
+            prev_line_internal();
         }
         
         public void select_to_beginning_of_line() {
-            print("Select beginning of line\n");
+            move_beginning_of_line_internal();
         }
         
         public void select_to_end_of_line() {
-            print("Select end of line\n");
+            move_end_of_line_internal();
         }
         
-		public bool forward_char() {
+        public void sync_cursors() {
+            select_cursor_index = insert_cursor_index;
+            select_cursor_trailing = insert_cursor_trailing;
+        }
+        
+        public void forward_char() {
+            forward_char_internal();
+            sync_cursors();
+        }
+        
+		public void forward_char_internal() {
 			int new_index, new_trailing;
-			layout.move_cursor_visually(true, cursor_index, cursor_trailing, 1, out new_index, out new_trailing);
+			layout.move_cursor_visually(true, insert_cursor_index, insert_cursor_trailing, 1, out new_index, out new_trailing);
 			
 			if (new_index != int.MAX) {
-				cursor_index = new_index;
-				cursor_trailing = new_trailing;
+				insert_cursor_index = new_index;
+				insert_cursor_trailing = new_trailing;
 			}
-			
-			return new_index == int.MAX;
         }
         
-        public bool backward_char() {
+        public void backward_char() {
+            backward_char_internal();
+            sync_cursors();
+        }
+        
+        public void backward_char_internal() {
 			int new_index, new_trailing;
-			layout.move_cursor_visually(true, cursor_index, cursor_trailing, -1, out new_index, out new_trailing);
+			layout.move_cursor_visually(true, insert_cursor_index, insert_cursor_trailing, -1, out new_index, out new_trailing);
 			
 			if (new_index >= 0) {
-				cursor_index = new_index;
-				cursor_trailing = new_trailing;
+				insert_cursor_index = new_index;
+				insert_cursor_trailing = new_trailing;
 			}
-			
-			return new_trailing == -1;
         }
         
 		public void forward_word() {
@@ -174,33 +232,53 @@ namespace Layouts {
         }
 		
         public void next_line() {
+            next_line_internal();
+            sync_cursors();
+        }
+        
+        public void next_line_internal() {
 			int line = get_cursor_line();
 
 			int new_index, new_trailing;
-			layout.xy_to_index(column_offset, (line + 1) * line_height * Pango.SCALE, out new_index, out new_trailing);
-			cursor_index = new_index;
-			cursor_trailing = new_trailing;
+			layout.xy_to_index(insert_cursor_column_offset, (line + 1) * line_height * Pango.SCALE, out new_index, out new_trailing);
+			insert_cursor_index = new_index;
+			insert_cursor_trailing = new_trailing;
         }
         
         public void prev_line() {
+            prev_line_internal();
+            sync_cursors();
+        }
+        
+        public void prev_line_internal() {
 			int line = get_cursor_line();
 
 			int new_index, new_trailing;
-			layout.xy_to_index(column_offset, (line - 1) * line_height * Pango.SCALE, out new_index, out new_trailing);
-			cursor_index = new_index;
-			cursor_trailing = new_trailing;
+			layout.xy_to_index(insert_cursor_column_offset, (line - 1) * line_height * Pango.SCALE, out new_index, out new_trailing);
+			insert_cursor_index = new_index;
+			insert_cursor_trailing = new_trailing;
         }
 		
-		public void move_beginning_of_line() {
+        public void move_beginning_of_line() {
+            move_beginning_of_line_internal();
+            sync_cursors();
+        }
+        
+		public void move_beginning_of_line_internal() {
 			int[] line_bound = find_line_bound();
-			cursor_index = line_bound[0];
-			cursor_trailing = 0;
+			insert_cursor_index = line_bound[0];
+			insert_cursor_trailing = 0;
 		}
+        
+        public void move_end_of_line() {
+            move_end_of_line_internal();
+            sync_cursors();
+        }
 		
-		public void move_end_of_line() {
+		public void move_end_of_line_internal() {
 			int[] line_bound = find_line_bound();
-			cursor_index = line_bound[1];
-			cursor_trailing = 1;
+			insert_cursor_index = line_bound[1];
+			insert_cursor_trailing = 1;
 		}
 		
 		public bool is_indentation_chars(unichar c, bool is_skip) {
@@ -233,7 +311,7 @@ namespace Layouts {
 			unichar c = 0;
 			bool found_next_char = true;
 
-			found_next_char = text.get_next_char(ref cursor_index, out c);
+			found_next_char = text.get_next_char(ref insert_cursor_index, out c);
 			while (found_next_char && !reach_end) {
 				if (is_word_bound_chars(c, is_skip)) {
                     if (c != '\n') {
@@ -242,7 +320,7 @@ namespace Layouts {
                     
 					reach_end = true;
 				} else {
-					found_next_char = text.get_next_char(ref cursor_index, out c);
+					found_next_char = text.get_next_char(ref insert_cursor_index, out c);
 					reach_end = !found_next_char;
 				}
 			}
@@ -253,13 +331,13 @@ namespace Layouts {
 			unichar c = 0;
 			bool found_next_char = true;
 
-			found_next_char = text.get_next_char(ref cursor_index, out c);
+			found_next_char = text.get_next_char(ref insert_cursor_index, out c);
 			while (found_next_char && !reach_end) {
 				if (is_indentation_chars(c, true)) {
 					backward_char();
 					reach_end = true;
 				} else {
-					found_next_char = text.get_next_char(ref cursor_index, out c);
+					found_next_char = text.get_next_char(ref insert_cursor_index, out c);
 					reach_end = !found_next_char;
 				}
 			}
@@ -278,13 +356,13 @@ namespace Layouts {
 			unichar c = 0;
 			bool found_prev_char = true;
 
-			found_prev_char = text.get_prev_char(ref cursor_index, out c);
+			found_prev_char = text.get_prev_char(ref insert_cursor_index, out c);
 			while (found_prev_char && !reach_end) {
 				if (is_word_bound_chars(c, is_skip)) {
 					forward_char();
 					reach_end = true;
 				} else {
-					found_prev_char = text.get_prev_char(ref cursor_index, out c);
+					found_prev_char = text.get_prev_char(ref insert_cursor_index, out c);
 					reach_end = !found_prev_char;
 				}
 			}
@@ -293,8 +371,8 @@ namespace Layouts {
 		public int[] find_line_bound() {
 			int[] line_bound = new int[2];
 			
-			line_bound[0] = text.substring(0, cursor_index).last_index_of_char('\n') + 1;
-			line_bound[1] = text.index_of_char('\n', cursor_index);
+			line_bound[0] = text.substring(0, insert_cursor_index).last_index_of_char('\n') + 1;
+			line_bound[1] = text.index_of_char('\n', insert_cursor_index);
 			
 			if (line_bound[1] == -1) {
 				line_bound[1] = text.char_count() - 1;
@@ -312,9 +390,9 @@ namespace Layouts {
 		}
             
 		public int get_cursor_line() {
-			return index_to_line_x(cursor_index, cursor_trailing)[0];
+			return index_to_line_x(insert_cursor_index, insert_cursor_trailing)[0];
 		}
-		
+        
         public override void update_track(Gtk.Widget widget, int drag_start_x, int drag_start_y, int? drag_x, int? drag_y) {
             can_draw = true;
                 
