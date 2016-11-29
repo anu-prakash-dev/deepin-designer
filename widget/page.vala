@@ -100,8 +100,14 @@ namespace Widgets {
             draw.connect(on_draw);
         }
         
-        public void handle_key_press(string keyname) {
-            if (!is_layout_move_start && focus_layout != null && focus_layout.get_type().is_a(typeof(Layouts.ShapeLayout)) && keyname == "Space") {
+        public bool handle_key_press(string keyname) {
+            if (layout_type == "Text" && focus_layout != null && !focus_layout.is_create_finish) {
+                if (((Layouts.TextLayout) focus_layout).handle_key_press(keyname)) {
+                    queue_draw();
+                }
+                
+                return true;
+            } else if (!is_layout_move_start && focus_layout != null && focus_layout.get_type().is_a(typeof(Layouts.ShapeLayout)) && keyname == "Space") {
                 is_layout_move_start = true;
                 
                 drag_start_save_x = drag_start_x;
@@ -111,7 +117,67 @@ namespace Widgets {
                 move_start_y = drag_y;
                 
                 ((Layouts.ShapeLayout) focus_layout).save_position();
+                
+                return true;
             }
+
+            if (keyname == "Alt + r") {
+                start_add_layout("Rectangle");
+                return true;
+            }
+            
+            if (keyname == "Alt + Shift + r") {
+                start_add_layout("Rounded_Rectangle");
+                return true;
+            }
+
+            if (keyname == "Alt + g") {
+                start_add_layout("Triangle");
+                return true;
+            }
+
+            if (keyname == "Alt + f") {
+                start_add_layout("Five_Pointed_Star");
+                return true;
+            }
+            
+            if (keyname == "Alt + p") {
+                start_add_layout("Pentagon");
+                return true;
+            }
+            
+            if (keyname == "Alt + o") {
+                start_add_layout("Oval");
+                return true;
+            }
+            
+            if (keyname == "Alt + l") {
+                start_add_layout("Line");
+                return true;
+            }
+            
+            if (keyname == "Alt + e") {
+                start_add_layout("Pencil");
+                return true;
+            }
+            
+            if (keyname == "Alt + t") {
+                start_add_layout("Text");
+                return true;
+            }
+            
+            if (keyname == "Alt + i") {
+                start_add_layout("Image");
+                return true;
+            }
+            
+            if (keyname == "Esc") {
+                cancel_add_layout();
+                return true;
+            }
+            
+                
+            return false;
         }
         
         public void handle_key_release(Gdk.EventKey key_event) {
