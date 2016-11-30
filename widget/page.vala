@@ -215,6 +215,11 @@ namespace Widgets {
                 }
             }
             
+            // cr.set_source_rgba(1, 0, 0, 1);
+            // cr.curve_to(60, 110, 10, 10, 110, 60);
+            // cr.stroke();
+            
+            
             foreach (Layouts.Layout layout in layout_manager.layout_list) {
                 layout.draw_layout(cr);
             }

@@ -9,10 +9,10 @@ namespace Layouts {
                 
             var r = 4;
             
-            add_draw_dot(x + width - r, y + r, r, Math.PI * 3 / 2, Math.PI * 2);
-            add_draw_dot(x + width - r, y + height - r, r, 0, Math.PI / 2);
-            add_draw_dot(x + r, y + height - r, r, Math.PI / 2, Math.PI);
-            add_draw_dot(x + r, y + r, r, Math.PI, Math.PI * 3 / 2);
+            add_draw_rounded_dot(x + width - r, y + r, r, Math.PI * 3 / 2, Math.PI * 2);
+            add_draw_rounded_dot(x + width - r, y + height - r, r, 0, Math.PI / 2);
+            add_draw_rounded_dot(x + r, y + height - r, r, Math.PI / 2, Math.PI);
+            add_draw_rounded_dot(x + r, y + r, r, Math.PI, Math.PI * 3 / 2);
         }
     }
 }

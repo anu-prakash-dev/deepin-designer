@@ -5,13 +5,18 @@ namespace Layouts {
     public class DrawDot : Object {
         public int x;
         public int y;
+
+        // Use for rounded rectangle.
         public double? radius;
         public double? start_angle;
         public double? end_angle;
 
-        public DrawDot(int dot_x, int dot_y, double? r=null, double? sa=null, double? ea=null) {
+        public DrawDot(int dot_x, int dot_y) {
             x = dot_x;
             y = dot_y;
+        }
+        
+        public void add_rounded(double? r=null, double? sa=null, double? ea=null) {
             radius = r;
             start_angle = sa;
             end_angle = ea;
@@ -95,8 +100,14 @@ namespace Layouts {
             draw_dots = new ArrayList<DrawDot>();
         }
 
-        public void add_draw_dot(int x, int y, double? r=null, double? sa=null, double? ea=null) {
-            var dot = new DrawDot(x, y, r, sa, ea);
+        public void add_draw_dot(int x, int y) {
+            var dot = new DrawDot(x, y);
+            draw_dots.add(dot);
+        }
+
+        public void add_draw_rounded_dot(int x, int y, double? r=null, double? sa=null, double? ea=null) {
+            var dot = new DrawDot(x, y);
+            dot.add_rounded(r, sa, ea);
             draw_dots.add(dot);
         }
         
@@ -117,11 +128,11 @@ namespace Layouts {
             
                 clean_draw_dots();
                 foreach (DrawDot dot in move_save_draw_dots) {
-                    add_draw_dot(dot.x + offset_x,
-                                 dot.y + offset_y,
-                                 dot.radius,
-                                 dot.start_angle,
-                                 dot.end_angle);
+                    add_draw_rounded_dot(dot.x + offset_x,
+                                         dot.y + offset_y,
+                                         dot.radius,
+                                         dot.start_angle,
+                                         dot.end_angle);
                 }
             } else {
                 print("WARNING: layout.update_position: move save variable is null.\n");

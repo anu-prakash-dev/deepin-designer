@@ -19,6 +19,7 @@ main: ./lib/animation.vala \
       ./widget/page_manager.vala \
       ./widget/page.vala \
       ./widget/pencil_layout.vala \
+      ./widget/pen_layout.vala \
       ./widget/oval_layout.vala \
       ./widget/image_layout.vala \
       ./widget/text_layout.vala \
@@ -64,6 +65,7 @@ main: ./lib/animation.vala \
 	./widget/page_manager.vala \
 	./widget/page.vala \
     ./widget/pencil_layout.vala \
+    ./widget/pen_layout.vala \
     ./widget/oval_layout.vala \
     ./widget/image_layout.vala \
     ./widget/text_layout.vala \
