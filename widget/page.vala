@@ -214,10 +214,45 @@ namespace Widgets {
                     Draw.draw_rectangle(cr, draw_x, draw_y, draw_width, draw_height, false);
                 }
             }
-            
+
+            // Circle.
+            // double c = 0.551915024494;
+            // int r = 50;
+            // int m = (int) (r * c);
             // cr.set_source_rgba(1, 0, 0, 1);
-            // cr.curve_to(60, 110, 10, 10, 110, 60);
+            // cr.translate(10, 10);
+            // cr.move_to(r, 0);
+            // cr.curve_to(r - m, 0, 0, r - m, 0, r);
+            // cr.move_to(0, r);
+            // cr.curve_to(0, r + m, r - m, 2 * r, r, 2 * r);
+            // cr.move_to(r, 2 * r);
+            // cr.curve_to(r + m, 2 * r, 2 * r, r + m, 2 * r, r);
+            // cr.move_to(2 * r, r);
+            // cr.curve_to(2 * r, r - m, r + m, 0, r, 0);
             // cr.stroke();
+
+            // Rouned rectangle.
+            // int r = 100;
+            // int m = 10;
+            // cr.translate(10, 10);
+            // cr.set_source_rgba(1, 0, 0, 1);
+            // cr.move_to(0, r - m);
+            // cr.curve_to(0, r - m, 0, r, m, r);
+            // cr.line_to(r - m, r);
+            // cr.curve_to(r - m, r, r, r, r, r - m);
+            // cr.line_to(r, m);
+            // cr.curve_to(r, m, r, 0, r - m, 0);
+            // cr.line_to(m, 0);
+            // cr.curve_to(m, 0, 0, 0, 0, m);
+            // cr.line_to(0, r - m);
+            // cr.stroke();
+            
+            // Five pointed star.
+            cr.translate(10, 10);
+            cr.set_source_rgba(1, 0, 0, 1);
+            cr.move_to(0, 0);
+            cr.curve_to(15, 15, 20, 20, 30, 30);
+            cr.stroke();
             
             
             foreach (Layouts.Layout layout in layout_manager.layout_list) {
